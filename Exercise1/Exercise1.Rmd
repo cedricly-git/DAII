@@ -1,0 +1,167 @@
+---
+title: "Exercise 1 - Introduction to R and R Markdown"
+author: "Cédric"
+date: "2025-02-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# R Markdown
+
+## Introduction
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+To generate an R Markdown document, you need to open RStudio, go on the **File** tab, and select **New File**, **R Markdown**. You include the title of the file and the output (i.e., the format of the file you will generate) and select **Ok**. Note that for your assignments you are required to upload html files, but R Markdown can also be used to generate pdf files.  
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can customize the behavior for your code chunks by adding options within the curly brackets after `r`. Here's a summary of some common options you can use for customizing the behavior of your code chunks:
+
+- **`echo=TRUE`**: This option controls whether the R code is shown in the final document. If you set it to `TRUE`, the code will be displayed along with the output. If you set it to `FALSE`, the code won't be shown—only the output will appear.
+
+- **`message=FALSE`**: When running R code, you might see messages (for example, when a package is being loaded). If you set `message=FALSE`, these messages will be hidden from the final output, keeping the document clean.
+
+- **`warning=FALSE`**: Sometimes, R will issue warnings, like when there might be an issue with the code or data. By setting `warning=FALSE`, these warnings won’t show up in your document, making the output more polished.
+
+- **`fig.width`** and **`fig.height`**: If your code generates plots, these options let you control the size of the plot. For example, you can use `fig.width=6` and `fig.height=4` to make a plot 6 inches wide and 4 inches tall.
+
+- **`eval=TRUE`**: This option determines whether the code will actually run. If set to `FALSE`, the code won't be executed, but it will still appear in the document. This is useful if you just want to show the code but not run it.
+
+- **`results='hide'`**: This option lets you hide the output of your code (but still run it). For example, if you only want to show the code without any results in the final document, you can use this option.
+
+To include a line break, use `<br>`. You can also format text to be bold or italic by surrounding the desired words with asterisks. Below are some examples:
+
+| **Code**| **Output**| **Explanation**|
+|---------|-----------|----------------|
+| `This is a script without line breaks.`| This is a script without line breaks.| Displays text as a single line without breaks.                                 |
+| `This is a script <br>`<br>`with a line break.`| This is a script <br> with a line break.| `<br>` inserts a line break, separating text into two lines.                   |
+| `This is a script with **bold text**`| This is a script with **bold text**| Adding two asterisks at the beginning and end of a word makes it bold.
+| `This is a script with *italic text*`| This is a script with *italic text*| Adding one asterisk at the beginning and end of a word makes it italic.
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Mathematical Notation
+
+If you want to add mathematical expressions to your file, you can use the following syntax. Notice that this syntax will also work for LaTeX in general (for more details on LaTeX see <https://www.latex-project.org/> and <https://en.wikibooks.org/wiki/LaTeX/Mathematics>). This will be useful for your assignments, as well as for your BA thesis.
+
+To add a math expression withing your text, you need to surround the expression with dollar symbols (\$). You can use LaTeX to write fractions $\frac{x}{y}$, powers $x^y$, Greek letters $\mu$, sums $\sum_{n=1}^{\infty} 2^{-n} = 1$, and much more. Visit <https://mathvault.ca/wp-content/uploads/Comprehensive-List-of-Mathematical-Symbols.pdf> to get a sense of the mathematical symbols available in LaTeX.
+
+| **Code** | **Output** | **Explanation** |
+|----------|------------|-----------------|
+| `$y = 2*x + 5$` | \( y = 2x + 5 \) | Use dollar signs (`$`) to insert inline mathematical expressions in your text. |
+| `$\frac{x}{y}$` | \( \frac{x}{y} \) | To display fractions, use LaTeX syntax like `$\frac{x}{y}$`. |
+| `$x^y$` | \( x^y \) | To display exponents or powers, use `x^y` inside dollar signs. |
+| `$\mu$` | \( \mu \) | Use LaTeX to insert special characters, like Greek letters, by wrapping them in dollar signs. |
+| `$\sum_{n=1}^{\infty} 2^{-n} = 1$` | \( \sum_{n=1}^{\infty} 2^{-n} = 1 \) | Use LaTeX commands inside dollar signs to display mathematical symbols, like summation notation. |
+
+# An Example of Assignment in R: Refreshing Key Concepts
+
+In this section, we’ll walk through an R assignment to refresh and reinforce key concepts. By the end, you’ll be better equipped to write your own assignments using R Markdown.
+
+**Important**: For your assignments, remember to include the names and matriculation numbers of all group members in the "author" section of the preamble of your Markdown file.
+
+**The dataset Ex1 contains the prices and other attributes of diamonds. Download the data from Canvas and import it into R. How many rows and columns are in the dataset?**
+
+First, we need to set the working directory. We do so by selecting **Set Working Directory** from the **Session** tab. We then choose **Choose Working Directory** and select the folder in which we have our data. Then, we select **Open**. Important: do not click on the dataset within the folder; instead, select the folder containing the data. We can check our working directory by running the command `getwd()`.
+
+```{r, eval=FALSE}
+getwd()
+```
+
+Now we can load the required packages. For the moment, we assume we will only need the packages **dplyr** and **ggplot2**. If we haven't installed them yet, we must install them before loading.
+
+**To install a package**, go to the **Packages** tab in the bottom right quadrant of the RStudio window and click on **Install**. Then, type the name of the package and click on **Install**. Alternatively, you can use the command `install.packages()`.
+
+**To load a package** that we have already installed, use the command `library()`.
+
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+
+Now, we are ready to open the data that we downloaded from Canvas. In this case, we use the `read.csv()` function since the dataset is in a CSV file. We create a new object for our analysis using the assignment operator "<-".
+
+```{r}
+data <- read.csv("Data/Ex1.csv")
+summary(data)
+```
+The `summary()` function gives us an overview of the data. It provides information on carat, color, clarity, price, and cut for more than 48,000 diamonds. We can now answer the first question of the assignment. The dataset contains `r nrow(data)` rows and `r ncol(data)` columns. We can obtain this information by checking the upper right quadrant of the RStudio window, or by using the `ncol()` and `nrow()` functions.
+
+```{r}
+ncol(data)
+nrow(data)
+```
+**Identify the issues with the names of the variables and solve them.**
+
+Two variables are misspelled. We can use the `rename()` function from the **dplyr** package to rename these variables.
+
+```{r}
+data <- data %>% rename(c0lor=color)
+data <- data %>% rename(prise=price)
+```
+
+**You receive the information that the variable color was wrongly included in the dataset, remove it.**
+
+We can use the `select()` function from **dplyr**. By including a minus sign, we select all the variables in the dataset, excluding the one after the minus sign.
+
+```{r}
+data <- data %>% select(,color)
+```
+
+**Check if there are missing values in the data and, if so, remove them.**
+
+```{r}
+skimr::skim(data)
+data <- data %>% filter(!is.na(clarity))
+```
+
+Using the `skim()` function from **skimr**, we can get information regarding our data, including the number of missing values. We see that 10% of the values for the variable *clarity* are missing, and we remove them, assuming that they are missing completely at random. We remove the missing values using the `filter()` function from **dplyr**, together with the `is.na()` function, which returns *TRUE* if the observation is missing.
+
+**Compute the average and the standard deviation of the numeric variables.**
+
+From the previous point, we know that *carat* and *price* are numeric variables. We can compute the summary statistics using `mean()` and `sd()`. Remember that we can access variables in the dataset using the dollar sign ($).
+
+```{r}
+mean(data$carat)
+sd(data$carat)
+mean(data$price)
+sd(data$price)
+```
+**Produce a density plot to visualize the distribution of diamond price per carat, grouped by the cut of the diamonds. Does the price per carat depend on the cut?**
+
+First, we transform the variable *cut* into a factor variable and reorder it from "Fair" to "Ideal". We use the functions `mutate()` together with `factor()`. A factor variable in R is a special type of categorical variable used to represent qualitative data (e.g., categories or groups). It stores values as levels and is useful for ordered or unordered classifications. In this case, we use the option `ordered=TRUE` to create an ordered factor, such that the levels have a meaningful order.
+
+```{r}
+data$cut <- factor(data$cut, levels = c("Fair", "Good", "Very Good", "Premium", "Ideal"), ordered = TRUE)
+```
+
+We now use the function `ggplot` to produce the density plot. We include the ratio between *price* and *carat* as the x-axis in the `aes()` option, then add layers using the plus sign. `facet_wrap()` is used to create separate plots for each category. We change the scale to logarithmic for better readability, add the plot title, and label the axes. Finally, we choose the minimal theme among those available in `ggplot2`.
+
+```{r}
+ggplot(data = data, aes(x=price/carat))+
+  geom_density()+
+  facet_wrap(~(cut), scale = "free")+
+  scale_x_log10()+
+  ggtitle("Distribution of Diamond Price per Carat: grouped by cut.") + 
+  xlab("Diamond Price per Carat U$ - LOG 10 Scale") + 
+  ylab("Frequency") + 
+  theme_minimal()
+```
+
+From the chart, we can observe that the price per carat increases with cut quality. However, this result does not imply that cut quality increases price / carat causally. Further analysis would be needed to draw conclusions in this regard. You will learn the tools to conduct such analyses during the rest of the semester.

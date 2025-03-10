@@ -1,0 +1,124 @@
+---
+title: "Assignment 1"
+author:
+- Grace Eve Olvany
+- Miguel Tortosa
+- Cédric Ly
+date: "2025-03-03"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Assignment 1
+
+## Exercise 1
+
+### Install packages
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+### Import the Data
+```{r}
+data1 <- read.csv("Assignment1.csv")
+summary(data1)
+```
+
+### Cleaning Data
+```{r}
+ncol(data1)
+nrow(data1)
+```
+
+```{r}
+data1 <- data1 %>% rename(gender=gendera) #change the name of the variable "gendera" to "gender"
+
+data1 <- data1 %>%
+  mutate(visits = ifelse(visits == "zero", 0, visits))
+data1$visits <- as.numeric(data1$visits) #change the values of the variable "visits" from string to numeric (double)
+
+data1$age <- data1$age * 100
+data1$age[data1$age > 100] <- data1$age[data1$age > 100] / 100 #change all age values to the same unit
+```
+
+```{r}
+skimr::skim(data1) #use summary and skim on "data1" to see if there is missing values or incoherent values
+data1 <- data1 %>% filter(!is.na(freepoor)) #taking all the missing values (NA) out of the data frame
+```
+
+### Computing the Mean and the Correlation
+```{r}
+average_age <- mean(data1$age, na.rm = TRUE) #compute the average of the age using function mean
+average_visits <- mean(data1$visits, na.rm = TRUE) #compute the average number of visits also using function mean
+```
+The average age of the data set is 40.64 years and the average visits is 0.23 days/week.
+
+```{r}
+correlation <- cor(data1$age, data1$visits, use = "complete.obs") #compute the correlation between the age and the number of visits
+```
+Expectation ex ante: 
+We think that the correlation between the age and the number of visits is positive. Because people tend to getter weaker or more often ill with an increasing age.
+
+Observation from the data: 
+There is a positive correlation (corr = 0.6453) between the two, meaning the older the patient is, the higher the number of doctor visits is in the two weeks. This correlation makes sense, since the older the patient is the more often, they will be going to the doctors since mostly likely their health is in worse shape. Maybe this correlation would be even stronger, if observed over a longer period. 
+
+
+## Exercise 2
+
+### Creation of the new datasets
+```{r}
+data_income <- data1 %>%
+  select(age, visits, income) #creation of the data set data_income by selecting the variables "age", "visits" and "income"
+```
+
+```{r}
+data_gender <- data1 %>%
+  select(age, visits, gender) #creation of the data set data_gender by selecting the variables "age", "visits" and "gender"
+```
+
+### Adding a new column (variable) to the data_income
+```{r}
+median_income <- median(data_income$income) #compute the median of income
+
+data_income <- data_income %>%
+  mutate(income_category = factor(ifelse(income > median_income, 
+                                         "Above Median Income", 
+                                         "Below Median Income"))) #create a new column (variable : income_category) with mutate with the values "Above Median Income" and "Below Median Income"
+```
+
+### Creating plot
+```{r}
+ggplot(data_income, aes(x = age, y = visits)) +
+  geom_point(color = 1) +
+  facet_wrap(~(income_category), scale = "free") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Correlation between Age and Visits by Income Class", 
+       x = "Age", 
+       y = "Number of Visits") +
+  theme_minimal() #generating the graphs for the data set "data_income" with ggplot2
+```
+
+Interpretation: Basing the Analysis on Income Class
+We have a positive correlation, as age increases, doctor visits also increase for both income groups.
+Below median income class has a steeper slope meaning lower-income individuals seem to visit the doctor more frequently as they age, possibly due having more stress and working more dangerous or strenuous job or having less access to preventative care or wellness.
+Above Median Income shows a milder increase – Wealthier individuals might have better healthcare access, allowing for preventive care instead of reactive doctor visits.
+Possible Interpretation: Older individuals in the lower-income group may rely more on reactive (rather than preventive) medical care. Wealthier individuals might have better insurance, private doctors, or healthier lifestyles, reducing their need for frequent visits.
+
+```{r}
+ggplot(data_gender, aes(x = age, y = visits)) +
+  geom_point(color = 1) +
+  facet_wrap(~(gender), scale = "free") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Correlation between Age and Visits by Gender", 
+       x = "Age", 
+       y = "Number of Visits") +
+  theme_minimal() #generating the graphs for the data set "data_gender" with ggplot2
+```
+
+Interpretation: 
+Basing the Analysis on Gender: Both groups show the increasing relationship between age and doctor visits. Indicating that both genders visits the doctors more often the older they get. Both groups seem to have similar positive correlation, but the trend line for women seems to be steeper. This indicates that women might visits the doctors more often than men. This may be because of pregnancies or complications following them. It may also be due to the lack of medical research on female bodies and therefore making more doctors visits necessary for proper diagnoses.
