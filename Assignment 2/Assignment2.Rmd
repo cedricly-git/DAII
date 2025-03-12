@@ -12,3 +12,28 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Install packages
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+```
+
+## 1. Load data
+```{r}
+data2 <- read_csv("exercise2_cantons.csv")
+View(data2)
+summary(data2)
+```
+
+## 2. Data Cleaning
+```{r}
+
+```
+
+## 3. Correlation matrix
+```{r}
+print(cor(select(data2, -canton), select(data2, -canton)))
+```
+
+## 4. Scatter Plot
