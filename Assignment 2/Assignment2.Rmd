@@ -1,6 +1,9 @@
 ---
 title: "Assignment 2"
-author: "Cédric"
+author: 
+  - Simon Alain Roger Gerdolle
+  - Leonardo Gonnelli
+  - Cédric Ly
 date: "2025-03-07"
 output: html_document
 ---
