@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
+library(stringr)
 library(readr)
 ```
 
@@ -24,12 +25,22 @@ library(readr)
 ```{r}
 data2 <- read_csv("exercise2_cantons.csv")
 View(data2)
-summary(data2)
 ```
 
 ## 2. Data Cleaning
 ```{r}
+colnames(data2) <- c("all_columns")
 
+data2 <- data2 %>%
+  mutate(split_data = str_split(all_columns, ";")) %>%
+  mutate(Canton = sapply(split_data, `[`, 1),
+         GDP = as.numeric(sapply(split_data, `[`, 2)),
+         Population = as.numeric(sapply(split_data, `[`, 3)),
+         Immigration = as.numeric(sapply(split_data, `[`, 4))) %>%
+  select(-all_columns, -split_data)
+
+data2 <- data2 %>%
+  filter(!Canton %in% c("Sri Lanka", "Liechtenstein"))
 ```
 
 ## 3. Correlation matrix (vu en classe)
