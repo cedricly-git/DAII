@@ -1,0 +1,28 @@
+---
+title: "Assignment 2"
+author: 
+  - Simon Alain Roger Gerdolle
+  - Leonardo Gonnelli
+  - Cédric Ly
+date: "2025-03-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#import packages
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+```
+
+
+```{r}
+data2cleaned <- read_delim("ps2_cantons_cleaned.csv", delim = ";")
+View(data2cleaned)
+data2surnames <- read_csv("ps2_cantons_surnames.csv")
+View(data2surnames)
+```
