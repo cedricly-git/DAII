@@ -19,10 +19,23 @@ library(ggplot2)
 library(dplyr)
 ```
 
-
+#load the data sets
 ```{r}
 data2cleaned <- read_delim("ps2_cantons_cleaned.csv", delim = ";")
 View(data2cleaned)
 data2surnames <- read_csv("ps2_cantons_surnames.csv")
 View(data2surnames)
+```
+
+```{r}
+# data checks
+skimr::skim(data2cleaned)
+print(data2cleaned$canton)
+
+skimr::skim(data2surnames)
+print(data2surnames$canton)
+
+data2surnames <- data2surnames %>% 
+  filter(canton != "Sri Lanka")
+
 ```
