@@ -27,6 +27,7 @@ data2surnames <- read_csv("ps2_cantons_surnames.csv")
 View(data2surnames)
 ```
 
+#1. Data Preparation
 ```{r}
 # data checks
 skimr::skim(data2cleaned)
