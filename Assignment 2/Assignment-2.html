@@ -361,7 +361,8 @@ display: none;
 </div>
 
 
-<p>#import packages</p>
+<div id="import-packages" class="section level1">
+<h1>import packages</h1>
 <pre class="r"><code>library(readr)
 library(ggplot2)
 library(dplyr)</code></pre>
@@ -373,7 +374,9 @@ library(dplyr)</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<p>#load the data sets</p>
+</div>
+<div id="load-the-data-sets" class="section level1">
+<h1>load the data sets</h1>
 <pre class="r"><code>cleaned &lt;- read_delim(&quot;ps2_cantons_cleaned.csv&quot;, delim = &quot;;&quot;)</code></pre>
 <pre><code>## Rows: 26 Columns: 4
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -384,7 +387,7 @@ library(dplyr)</code></pre>
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>View(cleaned)
-surnames &lt;- read_delim(&quot;ps2_cantons_surnames.csv&quot;, delim = &quot;,&quot;)</code></pre>
+surnames &lt;- read_delim(&quot;ps2_cantons_surnames.csv&quot;)</code></pre>
 <pre><code>## Rows: 27 Columns: 3
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -394,7 +397,9 @@ surnames &lt;- read_delim(&quot;ps2_cantons_surnames.csv&quot;, delim = &quot;,&
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>View(surnames)</code></pre>
-<p>#1. Data Preparation</p>
+</div>
+<div id="data-preparation" class="section level1">
+<h1>1. Data Preparation</h1>
 <pre class="r"><code># Rename
 surnames [12, &quot;canton&quot;] &lt;- &quot;St. Gallen&quot;
 
@@ -563,23 +568,193 @@ skimr::skim(merged_data)</code></pre>
 ## [17] &quot;Schwyz&quot;           &quot;Solothurn&quot;        &quot;St. Gallen&quot;       &quot;Thurgau&quot;         
 ## [21] &quot;Ticino&quot;           &quot;Uri&quot;              &quot;Valais&quot;           &quot;Vaud&quot;            
 ## [25] &quot;Zug&quot;              &quot;Zurich&quot;</code></pre>
-<p>#2. Estimation of a univariate model <span class="math display">\[
-gdp = \beta_0 + \beta_1 \cdot share _ \cdot mueller + u
+</div>
+<div id="estimation-of-a-univariate-model" class="section level1">
+<h1>2. Estimation of a univariate model</h1>
+<p><span class="math display">\[
+gdp = \beta_0 + \beta_1 \cdot share \_mueller + u
 \]</span></p>
-<pre class="r"><code>model &lt;- lm(gdp ~ share_mueller, data = merged_data)
-print(model$coefficients)</code></pre>
+<pre class="r"><code>model1 &lt;- lm(gdp ~ share_mueller, data = merged_data)
+print(model1$coefficients)</code></pre>
 <pre><code>##   (Intercept) share_mueller 
 ##      8059.703    804465.380</code></pre>
 <p><span class="math display">\[
-gdp = 8059.703 + 804465.380 \cdot share _ \cdot mueller + u
+gdp = 8059.703 + 804465.380 \cdot share \_mueller + u
 \]</span> interpretation :</p>
 <pre class="r"><code>#prediction of gpd with share_mueller = 0,1
 B0 &lt;-  8059.703
 B1 &lt;- 804465.380
-X &lt;- 0.1
+X1 &lt;- 0.1
 
-y = B0 + B1 * X</code></pre>
-<p>#3. Comparison of two univariate models</p>
+y = B0 + B1 * X1</code></pre>
+</div>
+<div id="comparison-of-two-univariate-models" class="section level1">
+<h1>3. Comparison of two univariate models</h1>
+<pre class="r"><code>#regression of gdp on population
+model2 &lt;- lm(gdp ~ population, data = merged_data)
+print(model2$coefficients)</code></pre>
+<pre><code>## (Intercept)  population 
+##   -1013.109   88621.379</code></pre>
+<p><span class="math display">\[
+gdp = -1013.109 + 88621.379 \cdot population + u
+\]</span></p>
+<pre class="r"><code># R^2 Share_mueller
+gdp_pred &lt;- model1$coefficients[1] + model1$coefficients[2] * merged_data$share_mueller
+SSR1 &lt;- sum((merged_data$gdp - gdp_pred)^2)
+SST1 &lt;- sum((mean(merged_data$gdp) - merged_data$gdp)^2)
+SSE1 &lt;- SST1 - SSR1
+rsquared1 &lt;- 1 - SSR1/SST1
+print(rsquared1)</code></pre>
+<pre><code>## [1] 0.6692101</code></pre>
+<pre class="r"><code># R^2 from lm model summary object
+print(summary(model1)$r.squared)</code></pre>
+<pre><code>## [1] 0.6692101</code></pre>
+<pre class="r"><code># R^2 Population
+gdp_pred &lt;- model2$coefficients[1] + model2$coefficients[2] * merged_data$population
+SSR2 &lt;- sum((merged_data$gdp - gdp_pred)^2)
+SST2 &lt;- sum((mean(merged_data$gdp) - merged_data$gdp)^2)
+SSE2 &lt;- SST2 - SSR2
+rsquared2 &lt;- 1 - SSR2/SST2
+print(rsquared2)</code></pre>
+<pre><code>## [1] 0.9354104</code></pre>
+<pre class="r"><code># R^2 from lm model summary object
+print(summary(model2)$r.squared)</code></pre>
+<pre><code>## [1] 0.9354104</code></pre>
+<p><em>Interpretation</em> • The regression using population as the
+independent variable explains 93.5% of the variation in GDP, which is
+significantly higher than the 66.8% explained by share_mueller. • This
+suggests that population is a much stronger predictor of GDP than
+share_mueller.</p>
+<p><em>Unbiasedness</em> • The unbiasedness of an estimator depends on
+whether the regression assumptions hold (e.g., SLR.4: no omitted
+variable bias). • Population is likely a fundamental determinant of GDP,
+meaning the coefficient in the second model is less prone to omitted
+variable bias. • Share_mueller may correlate with other economic or
+demographic factors, leading to potential omitted variable bias in the
+first regression.</p>
+<p><em>Predictive Power and Unbiasedness</em> • Higher R² means better
+predictive power, but it does not imply unbiasedness. • If important
+variables are missing, even a high R² can be misleading due to omitted
+variable bias. • Population seems to be a more natural predictor of GDP
+than share_mueller, making it a better choice for modeling.</p>
+</div>
+<div id="univariate-model-without-a-constant" class="section level1">
+<h1>4 Univariate model without a constant</h1>
+<p><span class="math display">\[
+gdp = \beta_1 \cdot share \_mueller + u
+\]</span></p>
+<pre class="r"><code>#prediction beta_1
+model3 &lt;- lm(gdp ~ 0 + share_mueller, data = merged_data)
+print(model3)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = gdp ~ 0 + share_mueller, data = merged_data)
+## 
+## Coefficients:
+## share_mueller  
+##        923212</code></pre>
+<p><em>Why Did the Coefficient Change?</em> • Removing the intercept
+forces the regression line through (0,0), altering the slope. • Without
+an intercept, _1 is computed as XY / X^2, leading to a higher magnitude
+than in the model with an intercept.</p>
+<p><em>Is the Estimate Unbiased?</em> • No, because GDP likely doesn’t
+drop to zero when share_mueller = 0. • Omitting the intercept biases _1
+since it absorbs the missing constant term. • A model with an intercept
+is usually more accurate.</p>
+</div>
+<div id="code-your-own-ols-estimator" class="section level1">
+<h1>5 Code your own OLS estimator</h1>
+<pre class="r"><code># Sample code 
+# Define your function 
+my_ols_univariate &lt;- function(y, x, add_constant = TRUE) {
+  if (add_constant) {
+    # Compute beta0 and beta1 
+    
+    beta1 = NA #### add your computation
+    beta0 = NA #### add your computation
+    
+    return(list(beta0 = beta0, beta1 = beta1))
+  } else {
+    # Compute beta1
+    
+    beta1 = NA #### add your computation
+    
+    return(list(beta1 = beta1))
+  }
+}
+
+# Call your function
+coefficients &lt;- my_ols_univariate(y=c(1,2,3),x=c(1,2,2),add_constant=TRUE)
+print(coefficients)</code></pre>
+<pre><code>## $beta0
+## [1] NA
+## 
+## $beta1
+## [1] NA</code></pre>
+<pre class="r"><code># Custom OLS function
+ols_estimator &lt;- function(y, x, add_constant = TRUE) {
+  if (add_constant) {
+    # Compute beta1 and beta0 (with intercept)
+    beta1 &lt;- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x))^2)
+    beta0 &lt;- mean(y) - beta1 * mean(x)
+    return(list(beta0 = beta0, beta1 = beta1))
+  } else {
+    # Compute beta1 only (without intercept)
+    beta1 &lt;- sum(x * y) / sum(x^2)
+    return(list(beta1 = beta1))
+  }
+}
+
+# Extract variables
+y &lt;- merged_data$gdp
+x &lt;- merged_data$share_mueller
+
+# Compute estimates
+ols_with_const &lt;- ols_estimator(y, x, add_constant = TRUE)
+ols_no_const &lt;- ols_estimator(y, x, add_constant = FALSE)
+
+# Compare with lm() results
+lm_with_const &lt;- lm(gdp ~ share_mueller, data = merged_data)
+lm_no_const &lt;- lm(gdp ~ 0 + share_mueller, data = merged_data)
+
+summary(lm_with_const)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = gdp ~ share_mueller, data = merged_data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -39093  -9623  -6187   6750  41320 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       8060       4813   1.675    0.107    
+## share_mueller   804465     115451   6.968 3.32e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 19370 on 24 degrees of freedom
+## Multiple R-squared:  0.6692, Adjusted R-squared:  0.6554 
+## F-statistic: 48.55 on 1 and 24 DF,  p-value: 3.321e-07</code></pre>
+<pre class="r"><code>summary(lm_no_const)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = gdp ~ 0 + share_mueller, data = merged_data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -42247  -2507   -240  13337  48369 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## share_mueller   923212      94340   9.786 4.95e-10 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 20050 on 25 degrees of freedom
+## Multiple R-squared:  0.793,  Adjusted R-squared:  0.7847 
+## F-statistic: 95.76 on 1 and 25 DF,  p-value: 4.953e-10</code></pre>
+</div>
 
 
 

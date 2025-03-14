@@ -12,22 +12,22 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#import packages
+# import packages
 ```{r}
 library(readr)
 library(ggplot2)
 library(dplyr)
 ```
 
-#load the data sets
+# load the data sets
 ```{r}
 cleaned <- read_delim("ps2_cantons_cleaned.csv", delim = ";")
 View(cleaned)
-surnames <- read_delim("ps2_cantons_surnames.csv", delim = ",")
+surnames <- read_delim("ps2_cantons_surnames.csv")
 View(surnames)
 ```
 
-#1. Data Preparation
+# 1. Data Preparation
 ```{r}
 # Rename
 surnames [12, "canton"] <- "St. Gallen"
@@ -47,14 +47,15 @@ print(merged_data$canton)
 
 ```
 
-#2. Estimation of a univariate model
+# 2. Estimation of a univariate model
 $$
 gdp = \beta_0 + \beta_1 \cdot share \_mueller + u
 $$
 ```{r}
-model <- lm(gdp ~ share_mueller, data = merged_data)
-print(model$coefficients)
+model1 <- lm(gdp ~ share_mueller, data = merged_data)
+print(model1$coefficients)
 ```
+
 $$
 gdp = 8059.703 + 804465.380 \cdot share \_mueller + u
 $$
@@ -64,17 +65,133 @@ interpretation :
 #prediction of gpd with share_mueller = 0,1
 B0 <-  8059.703
 B1 <- 804465.380
-X <- 0.1
+X1 <- 0.1
 
-y = B0 + B1 * X
+y = B0 + B1 * X1
 ```
 
-#3. Comparison of two univariate models
+# 3. Comparison of two univariate models
 ```{r}
-model <- lm(gdp ~ population, data = merged_data)
-print(model$coefficients)
+#regression of gdp on population
+model2 <- lm(gdp ~ population, data = merged_data)
+print(model2$coefficients)
 ```
 
+$$
+gdp = -1013.109 + 88621.379 \cdot population + u
+$$
+
+```{r}
+# R^2 Share_mueller
+gdp_pred <- model1$coefficients[1] + model1$coefficients[2] * merged_data$share_mueller
+SSR1 <- sum((merged_data$gdp - gdp_pred)^2)
+SST1 <- sum((mean(merged_data$gdp) - merged_data$gdp)^2)
+SSE1 <- SST1 - SSR1
+rsquared1 <- 1 - SSR1/SST1
+print(rsquared1)
+
+# R^2 from lm model summary object
+print(summary(model1)$r.squared)
 
 
+# R^2 Population
+gdp_pred <- model2$coefficients[1] + model2$coefficients[2] * merged_data$population
+SSR2 <- sum((merged_data$gdp - gdp_pred)^2)
+SST2 <- sum((mean(merged_data$gdp) - merged_data$gdp)^2)
+SSE2 <- SST2 - SSR2
+rsquared2 <- 1 - SSR2/SST2
+print(rsquared2)
 
+# R^2 from lm model summary object
+print(summary(model2)$r.squared)
+
+```
+*Interpretation*
+	•	The regression using population as the independent variable explains 93.5% of the variation in GDP, which is significantly higher than the 66.8% explained by share_mueller.
+	•	This suggests that population is a much stronger predictor of GDP than share_mueller.
+
+  *Unbiasedness*
+	•	The unbiasedness of an estimator depends on whether the regression assumptions hold (e.g., SLR.4: no omitted variable bias).
+	•	Population is likely a fundamental determinant of GDP, meaning the coefficient in the second model is less prone to omitted variable bias.
+	•	Share_mueller may correlate with other economic or demographic factors, leading to potential omitted variable bias in the first regression.
+
+*Predictive Power and Unbiasedness*
+	•	Higher R² means better predictive power, but it does not imply unbiasedness.
+	•	If important variables are missing, even a high R² can be misleading due to omitted variable bias.
+	•	Population seems to be a more natural predictor of GDP than share_mueller, making it a better choice for modeling.
+
+# 4 Univariate model without a constant
+$$
+gdp = \beta_1 \cdot share \_mueller + u
+$$
+```{r}
+#prediction beta_1
+model3 <- lm(gdp ~ 0 + share_mueller, data = merged_data)
+print(model3)
+```
+*Why Did the Coefficient Change?*
+	•	Removing the intercept forces the regression line through (0,0), altering the slope.
+	•	Without an intercept, \beta_1 is computed as \sum XY / \sum X^2, leading to a higher magnitude than in the model with an intercept.
+
+*Is the Estimate Unbiased?*
+	•	No, because GDP likely doesn’t drop to zero when share_mueller = 0.
+	•	Omitting the intercept biases \beta_1 since it absorbs the missing constant term.
+	•	A model with an intercept is usually more accurate.
+
+# 5 Code your own OLS estimator
+```{r}
+# Sample code 
+# Define your function 
+my_ols_univariate <- function(y, x, add_constant = TRUE) {
+  if (add_constant) {
+    # Compute beta0 and beta1 
+    
+    beta1 = NA #### add your computation
+    beta0 = NA #### add your computation
+    
+    return(list(beta0 = beta0, beta1 = beta1))
+  } else {
+    # Compute beta1
+    
+    beta1 = NA #### add your computation
+    
+    return(list(beta1 = beta1))
+  }
+}
+
+# Call your function
+coefficients <- my_ols_univariate(y=c(1,2,3),x=c(1,2,2),add_constant=TRUE)
+print(coefficients)
+
+```
+
+```{r}
+# Custom OLS function
+ols_estimator <- function(y, x, add_constant = TRUE) {
+  if (add_constant) {
+    # Compute beta1 and beta0 (with intercept)
+    beta1 <- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x))^2)
+    beta0 <- mean(y) - beta1 * mean(x)
+    return(list(beta0 = beta0, beta1 = beta1))
+  } else {
+    # Compute beta1 only (without intercept)
+    beta1 <- sum(x * y) / sum(x^2)
+    return(list(beta1 = beta1))
+  }
+}
+
+# Extract variables
+y <- merged_data$gdp
+x <- merged_data$share_mueller
+
+# Compute estimates
+ols_with_const <- ols_estimator(y, x, add_constant = TRUE)
+ols_no_const <- ols_estimator(y, x, add_constant = FALSE)
+
+# Compare with lm() results
+lm_with_const <- lm(gdp ~ share_mueller, data = merged_data)
+lm_no_const <- lm(gdp ~ 0 + share_mueller, data = merged_data)
+
+summary(lm_with_const)
+summary(lm_no_const)
+```
