@@ -21,22 +21,60 @@ library(dplyr)
 
 #load the data sets
 ```{r}
-data2cleaned <- read_delim("ps2_cantons_cleaned.csv", delim = ";")
-View(data2cleaned)
-data2surnames <- read_csv("ps2_cantons_surnames.csv")
-View(data2surnames)
+cleaned <- read_delim("ps2_cantons_cleaned.csv", delim = ";")
+View(cleaned)
+surnames <- read_delim("ps2_cantons_surnames.csv", delim = ",")
+View(surnames)
 ```
 
 #1. Data Preparation
 ```{r}
-# data checks
-skimr::skim(data2cleaned)
-print(data2cleaned$canton)
+# Rename
+surnames [12, "canton"] <- "St. Gallen"
 
-skimr::skim(data2surnames)
-print(data2surnames$canton)
-
-data2surnames <- data2surnames %>% 
-  filter(canton != "Sri Lanka")
+# Merge data sets
+merged_data <- cleaned %>%
+  left_join(surnames %>% select(canton, share_mueller), by = "canton") %>%
+  select(-immigration)
+View(merged_data)
 
 ```
+
+```{r}
+# data checks
+skimr::skim(merged_data)
+print(merged_data$canton)
+
+```
+
+#2. Estimation of a univariate model
+$$
+gdp = \beta_0 + \beta_1 \cdot share \_mueller + u
+$$
+```{r}
+model <- lm(gdp ~ share_mueller, data = merged_data)
+print(model$coefficients)
+```
+$$
+gdp = 8059.703 + 804465.380 \cdot share \_mueller + u
+$$
+interpretation :
+
+```{r}
+#prediction of gpd with share_mueller = 0,1
+B0 <-  8059.703
+B1 <- 804465.380
+X <- 0.1
+
+y = B0 + B1 * X
+```
+
+#3. Comparison of two univariate models
+```{r}
+model <- lm(gdp ~ population, data = merged_data)
+print(model$coefficients)
+```
+
+
+
+
