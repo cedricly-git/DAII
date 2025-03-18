@@ -366,42 +366,19 @@ display: none;
 <pre class="r"><code>library(readr)
 library(ggplot2)
 library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
 </div>
 <div id="load-the-data-sets" class="section level1">
 <h1>load the data sets</h1>
-<pre class="r"><code>cleaned &lt;- read_delim(&quot;ps2_cantons_cleaned.csv&quot;, delim = &quot;;&quot;)</code></pre>
-<pre><code>## Rows: 26 Columns: 4
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;;&quot;
-## chr (1): canton
-## dbl (3): gdp, population, immigration
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>View(cleaned)
-surnames &lt;- read_delim(&quot;ps2_cantons_surnames.csv&quot;)</code></pre>
-<pre><code>## Rows: 27 Columns: 3
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (1): canton
-## dbl (2): share_mueller, share_maier
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>View(surnames)</code></pre>
+<pre class="r"><code>cleaned &lt;- read_delim(&quot;ps2_cantons_cleaned.csv&quot;, delim = &quot;;&quot;)
+View(cleaned)
+surnames &lt;- read_delim(&quot;ps2_cantons_surnames.csv&quot;)
+View(surnames)</code></pre>
 </div>
 <div id="data-preparation" class="section level1">
 <h1>1. Data Preparation</h1>
 <pre class="r"><code># Rename
-surnames [12, &quot;canton&quot;] &lt;- &quot;St. Gallen&quot;
+surnames &lt;- surnames %&gt;%
+  mutate(canton = if_else(row_number() == 12 &amp; canton == &quot;Sankt Gallen&quot;, &quot;St. Gallen&quot;, canton))
 
 # Merge data sets
 merged_data &lt;- cleaned %&gt;%

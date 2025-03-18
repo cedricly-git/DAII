@@ -9,11 +9,11 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 # import packages
-```{r}
+```{r, ECHO = TRUE}
 library(readr)
 library(ggplot2)
 library(dplyr)
@@ -30,7 +30,8 @@ View(surnames)
 # 1. Data Preparation
 ```{r}
 # Rename
-surnames [12, "canton"] <- "St. Gallen"
+surnames <- surnames %>%
+  mutate(canton = if_else(row_number() == 12 & canton == "Sankt Gallen", "St. Gallen", canton))
 
 # Merge data sets
 merged_data <- cleaned %>%
