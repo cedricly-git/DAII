@@ -9,9 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Simon Alain Roger Gerdolle" />
-<meta name="author" content="Leonardo Gonnelli" />
-<meta name="author" content="Cédric Ly" />
+<meta name="author" content="Simon Alain Roger Gerdolle 23-611-940" />
+<meta name="author" content="Leonardo Gonnelli 23-617-111" />
+<meta name="author" content="Cédric Ly 23-615-487" />
 
 <meta name="date" content="2025-03-13" />
 
@@ -353,22 +353,22 @@ display: none;
 
 
 <h1 class="title toc-ignore">Assignment 2</h1>
-<h4 class="author">Simon Alain Roger Gerdolle</h4>
-<h4 class="author">Leonardo Gonnelli</h4>
-<h4 class="author">Cédric Ly</h4>
+<h4 class="author">Simon Alain Roger Gerdolle 23-611-940</h4>
+<h4 class="author">Leonardo Gonnelli 23-617-111</h4>
+<h4 class="author">Cédric Ly 23-615-487</h4>
 <h4 class="date">2025-03-13</h4>
 
 </div>
 
 
 <div id="import-packages" class="section level1">
-<h1>import packages</h1>
+<h1>Import packages</h1>
 <pre class="r"><code>library(readr)
 library(ggplot2)
 library(dplyr)</code></pre>
 </div>
 <div id="load-the-data-sets" class="section level1">
-<h1>load the data sets</h1>
+<h1>Load the data sets</h1>
 <pre class="r"><code>cleaned &lt;- read_delim(&quot;ps2_cantons_cleaned.csv&quot;, delim = &quot;;&quot;)
 View(cleaned)
 surnames &lt;- read_delim(&quot;ps2_cantons_surnames.csv&quot;)
@@ -378,7 +378,7 @@ View(surnames)</code></pre>
 <h1>1. Data Preparation</h1>
 <pre class="r"><code># Rename
 surnames &lt;- surnames %&gt;%
-  mutate(canton = if_else(row_number() == 12 &amp; canton == &quot;Sankt Gallen&quot;, &quot;St. Gallen&quot;, canton))
+  mutate(canton = if_else(canton == &quot;Sankt Gallen&quot;, &quot;St. Gallen&quot;, canton))
 
 # Merge data sets
 merged_data &lt;- cleaned %&gt;%
@@ -547,7 +547,7 @@ skimr::skim(merged_data)</code></pre>
 ## [25] &quot;Zug&quot;              &quot;Zurich&quot;</code></pre>
 </div>
 <div id="estimation-of-a-univariate-model" class="section level1">
-<h1>2. Estimation of a univariate model</h1>
+<h1>2. Estimation of a Univariate Model</h1>
 <p><span class="math display">\[
 gdp = \beta_0 + \beta_1 \cdot share \_mueller + u
 \]</span></p>
@@ -557,7 +557,20 @@ print(model1$coefficients)</code></pre>
 ##      8059.703    804465.380</code></pre>
 <p><span class="math display">\[
 gdp = 8059.703 + 804465.380 \cdot share \_mueller + u
-\]</span> interpretation :</p>
+\]</span> Interpretation :</p>
+<ol style="list-style-type: decimal">
+<li><p>Beta_⁠0 = 8059.703 (Intercept): This represents the expected GDP
+per canton (in million CHF) when the share of the population with the
+surname “Mueller” is equal to 0. In other words, if a canton had no
+residents with this surname, the model predicts that its GDP would be
+approximately 8059.703 million CHF.</p></li>
+<li><p>Beta_1 = 804465.380 (Slope): This coefficient indicates that for
+every 1 percentage point increase in the share of the population with
+the surname “Mueller”, the model predicts that GDP will increase by
+804,465.38 million CHF. This is an extremely large effect, suggesting a
+very strong positive correlation between the share of people with the
+surname Mueller and GDP.</p></li>
+</ol>
 <pre class="r"><code>#prediction of gpd with share_mueller = 0,1
 B0 &lt;-  8059.703
 B1 &lt;- 804465.380
@@ -566,7 +579,7 @@ X1 &lt;- 0.1
 y = B0 + B1 * X1</code></pre>
 </div>
 <div id="comparison-of-two-univariate-models" class="section level1">
-<h1>3. Comparison of two univariate models</h1>
+<h1>3. Comparison of two Univariate Models</h1>
 <pre class="r"><code>#regression of gdp on population
 model2 &lt;- lm(gdp ~ population, data = merged_data)
 print(model2$coefficients)</code></pre>

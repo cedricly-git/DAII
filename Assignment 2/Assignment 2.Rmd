@@ -1,9 +1,9 @@
 ---
 title: "Assignment 2"
 author: 
-  - Simon Alain Roger Gerdolle
-  - Leonardo Gonnelli
-  - Cédric Ly
+  - Simon Alain Roger Gerdolle 23-611-940
+  - Leonardo Gonnelli 23-617-111
+  - Cédric Ly 23-615-487
 date: "2025-03-13"
 output: html_document
 ---
@@ -12,14 +12,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-# import packages
+# Import packages
 ```{r, ECHO = TRUE}
 library(readr)
 library(ggplot2)
 library(dplyr)
 ```
 
-# load the data sets
+# Load the data sets
 ```{r}
 cleaned <- read_delim("ps2_cantons_cleaned.csv", delim = ";")
 View(cleaned)
@@ -31,7 +31,7 @@ View(surnames)
 ```{r}
 # Rename
 surnames <- surnames %>%
-  mutate(canton = if_else(row_number() == 12 & canton == "Sankt Gallen", "St. Gallen", canton))
+  mutate(canton = if_else(canton == "Sankt Gallen", "St. Gallen", canton))
 
 # Merge data sets
 merged_data <- cleaned %>%
@@ -48,7 +48,7 @@ print(merged_data$canton)
 
 ```
 
-# 2. Estimation of a univariate model
+# 2. Estimation of a Univariate Model
 $$
 gdp = \beta_0 + \beta_1 \cdot share \_mueller + u
 $$
@@ -60,7 +60,15 @@ print(model1$coefficients)
 $$
 gdp = 8059.703 + 804465.380 \cdot share \_mueller + u
 $$
-interpretation :
+Interpretation :
+
+1. Beta_⁠0 = 8059.703 (Intercept):
+This represents the expected GDP per canton (in million CHF) when the share of the population with the surname “Mueller” is equal to 0.
+In other words, if a canton had no residents with this surname, the model predicts that its GDP would be approximately 8059.703 million CHF.
+
+2.	Beta_1 = 804465.380 (Slope):
+This coefficient indicates that for every 1 percentage point increase in the share of the population with the surname “Mueller”, the model predicts that GDP will increase by 804,465.38 million CHF.
+This is an extremely large effect, suggesting a very strong positive correlation between the share of people with the surname Mueller and GDP.
 
 ```{r}
 #prediction of gpd with share_mueller = 0,1
@@ -71,7 +79,7 @@ X1 <- 0.1
 y = B0 + B1 * X1
 ```
 
-# 3. Comparison of two univariate models
+# 3. Comparison of two Univariate Models
 ```{r}
 #regression of gdp on population
 model2 <- lm(gdp ~ population, data = merged_data)
