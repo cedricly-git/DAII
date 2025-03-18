@@ -376,11 +376,11 @@ View(surnames)</code></pre>
 </div>
 <div id="data-preparation" class="section level1">
 <h1>1. Data Preparation</h1>
-<pre class="r"><code># Rename
+<pre class="r"><code># Renaming &quot;Sankt Gallen&quot; to resolve merging issue
 surnames &lt;- surnames %&gt;%
   mutate(canton = if_else(canton == &quot;Sankt Gallen&quot;, &quot;St. Gallen&quot;, canton))
 
-# Merge data sets
+# Merge the two data sets (left_join take out Sri Lanka because it doesn&#39;t exist in the cleaned data)
 merged_data &lt;- cleaned %&gt;%
   left_join(surnames %&gt;% select(canton, share_mueller), by = &quot;canton&quot;) %&gt;%
   select(-immigration)

@@ -29,11 +29,11 @@ View(surnames)
 
 # 1. Data Preparation
 ```{r}
-# Rename
+# Renaming "Sankt Gallen" to resolve merging issue
 surnames <- surnames %>%
   mutate(canton = if_else(canton == "Sankt Gallen", "St. Gallen", canton))
 
-# Merge data sets
+# Merge the two data sets (left_join take out Sri Lanka because it doesn't exist in the cleaned data)
 merged_data <- cleaned %>%
   left_join(surnames %>% select(canton, share_mueller), by = "canton") %>%
   select(-immigration)
