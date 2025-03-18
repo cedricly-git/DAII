@@ -557,7 +557,7 @@ print(model1$coefficients)</code></pre>
 ##      8059.703    804465.380</code></pre>
 <p><span class="math display">\[
 gdp = 8059.703 + 804465.380 \cdot share \_mueller + u
-\]</span> Interpretation :</p>
+\]</span> <em>Interpretation</em> :</p>
 <ol style="list-style-type: decimal">
 <li><p>Beta_⁠0 = 8059.703 (Intercept): This represents the expected GDP
 per canton (in million CHF) when the share of the population with the
@@ -576,7 +576,9 @@ B0 &lt;-  8059.703
 B1 &lt;- 804465.380
 X1 &lt;- 0.1
 
-y = B0 + B1 * X1</code></pre>
+y = B0 + B1 * X1
+print(y)</code></pre>
+<pre><code>## [1] 88506.24</code></pre>
 </div>
 <div id="comparison-of-two-univariate-models" class="section level1">
 <h1>3. Comparison of two Univariate Models</h1>
@@ -610,26 +612,26 @@ print(rsquared2)</code></pre>
 <pre class="r"><code># R^2 from lm model summary object
 print(summary(model2)$r.squared)</code></pre>
 <pre><code>## [1] 0.9354104</code></pre>
-<p><em>Interpretation</em> • The regression using population as the
+<p><em>Interpretation</em> : The regression using population as the
 independent variable explains 93.5% of the variation in GDP, which is
-significantly higher than the 66.8% explained by share_mueller. • This
+significantly higher than the 66.8% explained by share_mueller. This
 suggests that population is a much stronger predictor of GDP than
 share_mueller.</p>
-<p><em>Unbiasedness</em> • The unbiasedness of an estimator depends on
+<p><em>Unbiasedness</em> : The unbiasedness of an estimator depends on
 whether the regression assumptions hold (e.g., SLR.4: no omitted
-variable bias). • Population is likely a fundamental determinant of GDP,
+variable bias). Population is likely a fundamental determinant of GDP,
 meaning the coefficient in the second model is less prone to omitted
-variable bias. • Share_mueller may correlate with other economic or
+variable bias. Share_mueller may correlate with other economic or
 demographic factors, leading to potential omitted variable bias in the
 first regression.</p>
-<p><em>Predictive Power and Unbiasedness</em> • Higher R² means better
-predictive power, but it does not imply unbiasedness. • If important
+<p><em>Predictive Power and Unbiasedness</em> : Higher R² means better
+predictive power, but it does not imply unbiasedness. If important
 variables are missing, even a high R² can be misleading due to omitted
-variable bias. • Population seems to be a more natural predictor of GDP
+variable bias. Population seems to be a more natural predictor of GDP
 than share_mueller, making it a better choice for modeling.</p>
 </div>
 <div id="univariate-model-without-a-constant" class="section level1">
-<h1>4 Univariate model without a constant</h1>
+<h1>4 Univariate Model without a Constant</h1>
 <p><span class="math display">\[
 gdp = \beta_1 \cdot share \_mueller + u
 \]</span></p>
@@ -643,67 +645,40 @@ print(model3)</code></pre>
 ## Coefficients:
 ## share_mueller  
 ##        923212</code></pre>
-<p><em>Why Did the Coefficient Change?</em> • Removing the intercept
-forces the regression line through (0,0), altering the slope. • Without
-an intercept, _1 is computed as XY / X^2, leading to a higher magnitude
-than in the model with an intercept.</p>
-<p><em>Is the Estimate Unbiased?</em> • No, because GDP likely doesn’t
-drop to zero when share_mueller = 0. • Omitting the intercept biases _1
-since it absorbs the missing constant term. • A model with an intercept
-is usually more accurate.</p>
+<p><em>Why Did the Coefficient Change?</em> : Removing the intercept
+forces the regression line through (0,0), altering the slope. Without an
+intercept, beta_1 is computed as sum(XY) / sum(X^2), leading to a higher
+magnitude than in the model with an intercept.</p>
+<p><em>Is the Estimate Unbiased?</em> : No, because GDP likely doesn’t
+drop to zero when share_mueller = 0. Omitting the intercept biases
+beta_1 since it absorbs the missing constant term. A model with an
+intercept is usually more accurate.</p>
 </div>
 <div id="code-your-own-ols-estimator" class="section level1">
 <h1>5 Code your own OLS estimator</h1>
-<pre class="r"><code># Sample code 
-# Define your function 
-my_ols_univariate &lt;- function(y, x, add_constant = TRUE) {
-  if (add_constant) {
-    # Compute beta0 and beta1 
-    
-    beta1 = NA #### add your computation
-    beta0 = NA #### add your computation
-    
-    return(list(beta0 = beta0, beta1 = beta1))
-  } else {
-    # Compute beta1
-    
-    beta1 = NA #### add your computation
-    
-    return(list(beta1 = beta1))
-  }
-}
-
-# Call your function
-coefficients &lt;- my_ols_univariate(y=c(1,2,3),x=c(1,2,2),add_constant=TRUE)
-print(coefficients)</code></pre>
-<pre><code>## $beta0
-## [1] NA
-## 
-## $beta1
-## [1] NA</code></pre>
 <pre class="r"><code># Custom OLS function
 ols_estimator &lt;- function(y, x, add_constant = TRUE) {
   if (add_constant) {
-    # Compute beta1 and beta0 (with intercept)
+    # Computing beta1 and beta0 (with intercept)
     beta1 &lt;- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x))^2)
     beta0 &lt;- mean(y) - beta1 * mean(x)
     return(list(beta0 = beta0, beta1 = beta1))
   } else {
-    # Compute beta1 only (without intercept)
+    # Computing beta1 only (without intercept)
     beta1 &lt;- sum(x * y) / sum(x^2)
     return(list(beta1 = beta1))
   }
 }
 
-# Extract variables
+# Extracting variables
 y &lt;- merged_data$gdp
 x &lt;- merged_data$share_mueller
 
-# Compute estimates
+# Computing estimates
 ols_with_const &lt;- ols_estimator(y, x, add_constant = TRUE)
 ols_no_const &lt;- ols_estimator(y, x, add_constant = FALSE)
 
-# Compare with lm() results
+# Comparing with lm() results
 lm_with_const &lt;- lm(gdp ~ share_mueller, data = merged_data)
 lm_no_const &lt;- lm(gdp ~ 0 + share_mueller, data = merged_data)
 
