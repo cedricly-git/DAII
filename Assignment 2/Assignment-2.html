@@ -385,7 +385,7 @@ merged_data &lt;- cleaned %&gt;%
   left_join(surnames %&gt;% select(canton, share_mueller), by = &quot;canton&quot;) %&gt;%
   select(-immigration)
 View(merged_data)</code></pre>
-<pre class="r"><code># data checks
+<pre class="r"><code># Data checks
 skimr::skim(merged_data)</code></pre>
 <table>
 <caption>Data summary</caption>
@@ -571,7 +571,7 @@ the surname “Mueller”, the model predicts that GDP will increase by
 very strong positive correlation between the share of people with the
 surname Mueller and GDP.</p></li>
 </ol>
-<pre class="r"><code>#prediction of gpd with share_mueller = 0,1
+<pre class="r"><code># Prediction of gpd with share_mueller = 0,1
 B0 &lt;-  8059.703
 B1 &lt;- 804465.380
 X1 &lt;- 0.1
@@ -582,7 +582,7 @@ print(y)</code></pre>
 </div>
 <div id="comparison-of-two-univariate-models" class="section level1">
 <h1>3. Comparison of two Univariate Models</h1>
-<pre class="r"><code>#regression of gdp on population
+<pre class="r"><code># Regression of gdp on population
 model2 &lt;- lm(gdp ~ population, data = merged_data)
 print(model2$coefficients)</code></pre>
 <pre><code>## (Intercept)  population 
@@ -598,7 +598,7 @@ SSE1 &lt;- SST1 - SSR1
 rsquared1 &lt;- 1 - SSR1/SST1
 print(rsquared1)</code></pre>
 <pre><code>## [1] 0.6692101</code></pre>
-<pre class="r"><code># R^2 from lm model summary object
+<pre class="r"><code># R^2 from lm model1 summary object
 print(summary(model1)$r.squared)</code></pre>
 <pre><code>## [1] 0.6692101</code></pre>
 <pre class="r"><code># R^2 Population
@@ -609,7 +609,7 @@ SSE2 &lt;- SST2 - SSR2
 rsquared2 &lt;- 1 - SSR2/SST2
 print(rsquared2)</code></pre>
 <pre><code>## [1] 0.9354104</code></pre>
-<pre class="r"><code># R^2 from lm model summary object
+<pre class="r"><code># R^2 from lm model2 summary object
 print(summary(model2)$r.squared)</code></pre>
 <pre><code>## [1] 0.9354104</code></pre>
 <p><em>Interpretation</em> : The regression using population as the
@@ -631,11 +631,11 @@ variable bias. Population seems to be a more natural predictor of GDP
 than share_mueller, making it a better choice for modeling.</p>
 </div>
 <div id="univariate-model-without-a-constant" class="section level1">
-<h1>4 Univariate Model without a Constant</h1>
+<h1>4. Univariate Model without a Constant</h1>
 <p><span class="math display">\[
 gdp = \beta_1 \cdot share \_mueller + u
 \]</span></p>
-<pre class="r"><code>#prediction beta_1
+<pre class="r"><code># Prediction beta_1
 model3 &lt;- lm(gdp ~ 0 + share_mueller, data = merged_data)
 print(model3)</code></pre>
 <pre><code>## 
@@ -655,15 +655,17 @@ beta_1 since it absorbs the missing constant term. A model with an
 intercept is usually more accurate.</p>
 </div>
 <div id="code-your-own-ols-estimator" class="section level1">
-<h1>5 Code your own OLS estimator</h1>
+<h1>5. Code your own OLS estimator</h1>
 <pre class="r"><code># Custom OLS function
 ols_estimator &lt;- function(y, x, add_constant = TRUE) {
   if (add_constant) {
-    # Computing beta1 and beta0 (with intercept)
+    
+    # Computing beta_1 and beta_0 (with intercept)
     beta1 &lt;- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x))^2)
     beta0 &lt;- mean(y) - beta1 * mean(x)
     return(list(beta0 = beta0, beta1 = beta1))
   } else {
+    
     # Computing beta1 only (without intercept)
     beta1 &lt;- sum(x * y) / sum(x^2)
     return(list(beta1 = beta1))

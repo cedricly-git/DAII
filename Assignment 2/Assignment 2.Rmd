@@ -42,7 +42,7 @@ View(merged_data)
 ```
 
 ```{r}
-# data checks
+# Data checks
 skimr::skim(merged_data)
 print(merged_data$canton)
 
@@ -71,7 +71,7 @@ This coefficient indicates that for every 1 percentage point increase in the sha
 This is an extremely large effect, suggesting a very strong positive correlation between the share of people with the surname Mueller and GDP.
 
 ```{r}
-#prediction of gpd with share_mueller = 0,1
+# Prediction of gpd with share_mueller = 0,1
 B0 <-  8059.703
 B1 <- 804465.380
 X1 <- 0.1
@@ -82,7 +82,7 @@ print(y)
 
 # 3. Comparison of two Univariate Models
 ```{r}
-#regression of gdp on population
+# Regression of gdp on population
 model2 <- lm(gdp ~ population, data = merged_data)
 print(model2$coefficients)
 ```
@@ -100,7 +100,7 @@ SSE1 <- SST1 - SSR1
 rsquared1 <- 1 - SSR1/SST1
 print(rsquared1)
 
-# R^2 from lm model summary object
+# R^2 from lm model1 summary object
 print(summary(model1)$r.squared)
 
 
@@ -112,10 +112,11 @@ SSE2 <- SST2 - SSR2
 rsquared2 <- 1 - SSR2/SST2
 print(rsquared2)
 
-# R^2 from lm model summary object
+# R^2 from lm model2 summary object
 print(summary(model2)$r.squared)
 
 ```
+
 *Interpretation* :
 The regression using population as the independent variable explains 93.5% of the variation in GDP, which is significantly higher than the 66.8% explained by share_mueller.
 This suggests that population is a much stronger predictor of GDP than share_mueller.
@@ -130,15 +131,16 @@ Higher R² means better predictive power, but it does not imply unbiasedness.
 If important variables are missing, even a high R² can be misleading due to omitted variable bias.
 Population seems to be a more natural predictor of GDP than share_mueller, making it a better choice for modeling.
 
-# 4 Univariate Model without a Constant
+# 4. Univariate Model without a Constant
 $$
 gdp = \beta_1 \cdot share \_mueller + u
 $$
 ```{r}
-#prediction beta_1
+# Prediction beta_1
 model3 <- lm(gdp ~ 0 + share_mueller, data = merged_data)
 print(model3)
 ```
+
 *Why Did the Coefficient Change?* :
 Removing the intercept forces the regression line through (0,0), altering the slope.
 Without an intercept, beta_1 is computed as sum(XY) / sum(X^2), leading to a higher magnitude than in the model with an intercept.
@@ -148,16 +150,18 @@ No, because GDP likely doesn’t drop to zero when share_mueller = 0.
 Omitting the intercept biases beta_1 since it absorbs the missing constant term.
 A model with an intercept is usually more accurate.
 
-# 5 Code your own OLS estimator
+# 5. Code your own OLS estimator
 ```{r}
 # Custom OLS function
 ols_estimator <- function(y, x, add_constant = TRUE) {
   if (add_constant) {
-    # Computing beta1 and beta0 (with intercept)
+    
+    # Computing beta_1 and beta_0 (with intercept)
     beta1 <- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x))^2)
     beta0 <- mean(y) - beta1 * mean(x)
     return(list(beta0 = beta0, beta1 = beta1))
   } else {
+    
     # Computing beta1 only (without intercept)
     beta1 <- sum(x * y) / sum(x^2)
     return(list(beta1 = beta1))
