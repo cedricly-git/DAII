@@ -182,4 +182,7 @@ lm_no_const <- lm(gdp ~ 0 + share_mueller, data = merged_data)
 
 summary(lm_with_const)
 summary(lm_no_const)
+print(model1$coefficients)
 ```
+*Comparison* :
+The estimated Beta_0 and Beta_1 values are close to the true values. This suggests that our estimator is accurate and the model effectively captures the relationship between variables.
