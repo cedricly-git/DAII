@@ -1,0 +1,25 @@
+---
+title: "Exercise3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Import packages
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+distance <- read_csv("distances_birthtown-2.csv")
+View(distance)
+skimr::skim(distance)
+```
+
+```{r}
+
+```
