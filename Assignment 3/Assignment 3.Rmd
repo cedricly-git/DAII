@@ -18,3 +18,13 @@ library(readr)
 library(ggplot2)
 library(dplyr)
 ```
+
+```{r}
+distance <- read_csv("distances_birthtown-1.csv")
+View(distance)
+skimr::skim(distance)
+```
+
+```{r}
+
+```
