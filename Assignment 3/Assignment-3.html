@@ -15,7 +15,7 @@
 
 <meta name="date" content="2025-03-13" />
 
-<title>Assignment 2</title>
+<title>Assignment 3</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,7 +352,7 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Assignment 2</h1>
+<h1 class="title toc-ignore">Assignment 3</h1>
 <h4 class="author">Simon Alain Roger Gerdolle 23-611-940</h4>
 <h4 class="author">Leonardo Gonnelli 23-617-111</h4>
 <h4 class="author">Cédric Ly 23-615-487</h4>
@@ -366,6 +366,209 @@ display: none;
 <pre class="r"><code>library(readr)
 library(ggplot2)
 library(dplyr)</code></pre>
+<pre class="r"><code>distance &lt;- read_csv(&quot;distances_birthtown-1.csv&quot;)
+View(distance)
+skimr::skim(distance)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">distance</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">13389</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">7</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">6</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="13%" />
+<col width="19%" />
+<col width="5%" />
+<col width="5%" />
+<col width="8%" />
+<col width="12%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">medicine</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col width="13%" />
+<col width="8%" />
+<col width="12%" />
+<col width="9%" />
+<col width="9%" />
+<col width="10%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">id</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6705.82</td>
+<td align="right">3871.07</td>
+<td align="right">1.00</td>
+<td align="right">3354.00</td>
+<td align="right">6707.00</td>
+<td align="right">10059.00</td>
+<td align="right">13407.00</td>
+<td align="left">▇▇▇▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">region</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2.95</td>
+<td align="right">2.43</td>
+<td align="right">0.00</td>
+<td align="right">1.00</td>
+<td align="right">2.00</td>
+<td align="right">4.00</td>
+<td align="right">14.00</td>
+<td align="left">▇▅▂▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">travel_time</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.95</td>
+<td align="right">1.05</td>
+<td align="right">-4.01</td>
+<td align="right">1.28</td>
+<td align="right">1.97</td>
+<td align="right">2.64</td>
+<td align="right">4.99</td>
+<td align="left">▁▁▃▇▂</td>
+</tr>
+<tr class="even">
+<td align="left">income</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-109710.54</td>
+<td align="right">1042094.38</td>
+<td align="right">-9999999.00</td>
+<td align="right">58.67</td>
+<td align="right">85.65</td>
+<td align="right">109.94</td>
+<td align="right">224.90</td>
+<td align="left">▁▁▁▁▇</td>
+</tr>
+<tr class="odd">
+<td align="left">income_parent1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-123941.61</td>
+<td align="right">1106595.42</td>
+<td align="right">-9999999.00</td>
+<td align="right">22.36</td>
+<td align="right">44.38</td>
+<td align="right">59.95</td>
+<td align="right">160.27</td>
+<td align="left">▁▁▁▁▇</td>
+</tr>
+<tr class="even">
+<td align="left">income_parent2</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-112747.70</td>
+<td align="right">1056012.54</td>
+<td align="right">-9999999.00</td>
+<td align="right">17.48</td>
+<td align="right">31.64</td>
+<td align="right">47.20</td>
+<td align="right">121.94</td>
+<td align="left">▁▁▁▁▇</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Replace missing values (-9999999) with 0
+cleaned_data &lt;- distance %&gt;%
+  mutate(across(c(income, income_parent1, income_parent2), ~replace(., . == -9999999, NA)))
+
+# Create the new variable: sum of parental incomes
+cleaned_data &lt;- distance %&gt;%
+  mutate(income_parents = income_parent1 + income_parent2)
+View(cleaned_data)</code></pre>
+</div>
+<div id="question-1" class="section level1">
+<h1>Question 1</h1>
 </div>
 
 

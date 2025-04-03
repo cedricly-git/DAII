@@ -1,5 +1,5 @@
 ---
-title: "Assignment 2"
+title: "Assignment 3"
 author: 
   - Simon Alain Roger Gerdolle 23-611-940
   - Leonardo Gonnelli 23-617-111
@@ -26,7 +26,7 @@ skimr::skim(distance)
 ```
 
 ```{r}
-# Replace missing values (-9999999) with NA
+# Replace missing values (-9999999) with 0
 cleaned_data <- distance %>%
   mutate(across(c(income, income_parent1, income_parent2), ~replace(., . == -9999999, NA)))
 
@@ -34,4 +34,34 @@ cleaned_data <- distance %>%
 cleaned_data <- distance %>%
   mutate(income_parents = income_parent1 + income_parent2)
 View(cleaned_data)
+```
+
+# Question 1a)
+```{r}
+
+```
+
+# Question 1b)
+```{r}
+
+```
+
+# Question 2i)
+```{r}
+
+```
+
+# Question 2ii)
+```{r}
+
+```
+
+# Question 2iii)
+```{r}
+
+```
+
+# Question 2iv)
+```{r}
+
 ```
