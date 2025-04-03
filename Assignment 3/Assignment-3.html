@@ -366,15 +366,15 @@ display: none;
 <pre class="r"><code>library(readr)
 library(ggplot2)
 library(dplyr)</code></pre>
-<pre class="r"><code>distance &lt;- read_csv(&quot;distances_birthtown-1.csv&quot;)
-View(distance)
-skimr::skim(distance)</code></pre>
+<pre class="r"><code>df3 &lt;- read_csv(&quot;distances_birthtown-1.csv&quot;)
+View(df3)
+skimr::skim(df3)</code></pre>
 <table>
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
 <td align="left">Name</td>
-<td align="left">distance</td>
+<td align="left">df3</td>
 </tr>
 <tr class="even">
 <td align="left">Number of rows</td>
@@ -558,17 +558,220 @@ skimr::skim(distance)</code></pre>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code># Replace missing values (-9999999) with 0
-cleaned_data &lt;- distance %&gt;%
-  mutate(across(c(income, income_parent1, income_parent2), ~replace(., . == -9999999, NA)))
+<div id="cleaning-data" class="section level2">
+<h2>1. Cleaning Data</h2>
+<pre class="r"><code># Check &#39;medicine&#39; variable format
+unique(df3[&#39;medicine&#39;])</code></pre>
+<pre><code>## # A tibble: 2 × 1
+##   medicine
+##   &lt;chr&gt;   
+## 1 Yes     
+## 2 No</code></pre>
+<pre class="r"><code># Encode &#39;medicine&#39; variable
+df3 &lt;- mutate(df3, medicine = ifelse(medicine == &quot;Yes&quot;, 1, 0))
 
-# Create the new variable: sum of parental incomes
-cleaned_data &lt;- distance %&gt;%
-  mutate(income_parents = income_parent1 + income_parent2)
-View(cleaned_data)</code></pre>
+
+# Set missing values for income variables
+df3 &lt;- mutate(df3, income = ifelse(income == -9999999, NaN, income)) %&gt;%
+  mutate(income_parent1 = ifelse(income_parent1 == -9999999, NaN, income_parent1)) %&gt;%
+  mutate(income_parent2 = ifelse(income_parent2 == -9999999, NaN, income_parent2))
+
+
+# Negative travel time
+df3 &lt;- mutate(df3, travel_time = ifelse(travel_time &lt; 0, NaN, travel_time))                    
+
+
+# Omit missing variables 
+df_sample &lt;- df3 |&gt;
+  na.omit()
+
+
+# Summarize the data again
+skimr:: skim(df_sample)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">df_sample</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">12806</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">7</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">7</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col width="15%" />
+<col width="10%" />
+<col width="14%" />
+<col width="8%" />
+<col width="8%" />
+<col width="3%" />
+<col width="8%" />
+<col width="8%" />
+<col width="9%" />
+<col width="9%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">id</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6715.79</td>
+<td align="right">3869.78</td>
+<td align="right">1</td>
+<td align="right">3373.25</td>
+<td align="right">6719.50</td>
+<td align="right">10070.75</td>
+<td align="right">13407.00</td>
+<td align="left">▇▇▇▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">region</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2.96</td>
+<td align="right">2.43</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">2.00</td>
+<td align="right">4.00</td>
+<td align="right">14.00</td>
+<td align="left">▇▅▂▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">travel_time</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.98</td>
+<td align="right">0.98</td>
+<td align="right">0</td>
+<td align="right">1.30</td>
+<td align="right">1.98</td>
+<td align="right">2.65</td>
+<td align="right">4.99</td>
+<td align="left">▃▇▇▃▁</td>
+</tr>
+<tr class="even">
+<td align="left">income</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">81.98</td>
+<td align="right">39.56</td>
+<td align="right">0</td>
+<td align="right">60.07</td>
+<td align="right">86.10</td>
+<td align="right">110.21</td>
+<td align="right">224.90</td>
+<td align="left">▃▇▇▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">income_parent1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">41.24</td>
+<td align="right">27.13</td>
+<td align="right">0</td>
+<td align="right">23.51</td>
+<td align="right">44.71</td>
+<td align="right">60.11</td>
+<td align="right">160.27</td>
+<td align="left">▆▇▃▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">income_parent2</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">31.79</td>
+<td align="right">21.59</td>
+<td align="right">0</td>
+<td align="right">18.36</td>
+<td align="right">31.95</td>
+<td align="right">47.37</td>
+<td align="right">121.94</td>
+<td align="left">▆▇▃▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">medicine</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.41</td>
+<td align="right">0.49</td>
+<td align="right">0</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+<td align="left">▇▁▁▁▆</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># create new variables
+df_sample &lt;- df_sample |&gt;
+  mutate(income_parents = income_parent1 + income_parent2,
+         travel_sq = travel_time^2)</code></pre>
 </div>
-<div id="question-1" class="section level1">
-<h1>Question 1</h1>
+</div>
+<div id="question-1a" class="section level1">
+<h1>Question 1a)</h1>
+</div>
+<div id="question-1b" class="section level1">
+<h1>Question 1b)</h1>
+</div>
+<div id="question-2i" class="section level1">
+<h1>Question 2i)</h1>
+</div>
+<div id="question-2ii" class="section level1">
+<h1>Question 2ii)</h1>
+</div>
+<div id="question-2iii" class="section level1">
+<h1>Question 2iii)</h1>
+</div>
+<div id="question-2iv" class="section level1">
+<h1>Question 2iv)</h1>
 </div>
 
 

@@ -20,20 +20,42 @@ library(dplyr)
 ```
 
 ```{r}
-distance <- read_csv("distances_birthtown-1.csv")
-View(distance)
-skimr::skim(distance)
+df3 <- read_csv("distances_birthtown-1.csv")
+View(df3)
+skimr::skim(df3)
 ```
 
+## 1. Cleaning Data
 ```{r}
-# Replace missing values (-9999999) with 0
-cleaned_data <- distance %>%
-  mutate(across(c(income, income_parent1, income_parent2), ~replace(., . == -9999999, NA)))
+# Check 'medicine' variable format
+unique(df3['medicine'])
 
-# Create the new variable: sum of parental incomes
-cleaned_data <- distance %>%
-  mutate(income_parents = income_parent1 + income_parent2)
-View(cleaned_data)
+# Encode 'medicine' variable
+df3 <- mutate(df3, medicine = ifelse(medicine == "Yes", 1, 0))
+
+
+# Set missing values for income variables
+df3 <- mutate(df3, income = ifelse(income == -9999999, NaN, income)) %>%
+  mutate(income_parent1 = ifelse(income_parent1 == -9999999, NaN, income_parent1)) %>%
+  mutate(income_parent2 = ifelse(income_parent2 == -9999999, NaN, income_parent2))
+
+
+# Negative travel time
+df3 <- mutate(df3, travel_time = ifelse(travel_time < 0, NaN, travel_time))                    
+
+
+# Omit missing variables 
+df_sample <- df3 |>
+  na.omit()
+
+
+# Summarize the data again
+skimr:: skim(df_sample)
+
+# create new variables
+df_sample <- df_sample |>
+  mutate(income_parents = income_parent1 + income_parent2,
+         travel_sq = travel_time^2)
 ```
 
 # Question 1a)
