@@ -26,5 +26,12 @@ skimr::skim(distance)
 ```
 
 ```{r}
+# Replace missing values (-9999999) with NA
+cleaned_data <- distance %>%
+  mutate(across(c(income, income_parent1, income_parent2), ~replace(., . == -9999999, NA)))
 
+# Create the new variable: sum of parental incomes
+cleaned_data <- distance %>%
+  mutate(income_parents = income_parent1 + income_parent2)
+View(cleaned_data)
 ```
