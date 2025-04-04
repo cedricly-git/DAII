@@ -59,9 +59,17 @@ df_sample <- df_sample |>
 ```
 
 # Question 1a)
-```{r}
 
-```
+We have : 
+$Y_{i,1} = \beta_0 + \beta_1X_i+u_i$, and $Z_i = 5X_i$
+
+We want to estimate the following new regression : 
+$Y_{i, 1} = \theta_0 + \theta_1Z_i+u_i$
+
+We will compute the new estimation by doing a simple substitution :
+$Y_{i,1} = \beta_0+\beta_1X_i+u_i = \beta_0 + \beta_1(\frac{Z_i}{5})+u_i = \beta_0 + (\frac{\beta_1}{5})Z_i+u_i$
+
+From this, we see that $\hat{\theta}_0 = \hat{\beta}_0$ (the intercept doesn't change) and that $\hat{\theta}_1 = \frac{\hat{\beta}_1}{5}$
 
 # Question 1b)
 ```{r}
