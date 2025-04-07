@@ -79,7 +79,7 @@ $\hat{\gamma}_1 = \hat{\beta}_1+\hat{\alpha}_1$
 We know the following:
 $W_i = Y_{i,1}+Y_{i,2}$
 
-As $Y_{i,1}$ and $Y_{i,2}$ are both dependent variables of $X_i$, and that their regression curves are linear, we can simply add all the parameters (as we were adding to linear functions). 
+As $Y_{i,1}$ and $Y_{i,2}$ are both dependent variables of $X_i$, and that their regression curves are linear, we can simply add all the parameters (as we were adding two linear functions). 
 $W_i = Y_{i,1}+Y_{i,2} = (\beta_0 + \beta_1X_i+u_i)+(\alpha_0+\alpha_1X_i+v_i)$
 $\Leftrightarrow W_i =\beta_0 + \alpha_0 + (\beta_1 + \alpha_1)X_i + u_i + v_i$ 
 
@@ -93,17 +93,28 @@ $W_i = \gamma_0 + \gamma_1Xi+e_i$
 
 # Question 2i)
 ```{r}
-
+Already done, move answer 1 here
 ```
 
 # Question 2ii)
 ```{r}
+We want to determine the medicine regression curve computed on the joint effect of travel_time and income_parents parameters, i.e. 
+$medicine_i = \beta_0  + \beta_1 \cdot \texttt{travel_time}_i +\beta_2\cdot\texttt{income_parents}_i + u_i$
 
+$\beta_0$ = intercept of the regression curve
+
+$\beta_1$ = coefficient on travel_time (the expected rate of change in medicine in a change of travel_time)
+
+$\beta_2$ = coefficient on income_parents (the expected rate of change in medicine in a change of income_parents)
 ```
 
 # Question 2iii)
 ```{r}
+joint_lm <- lm(data = df_sample, medicine ~ travel_time + income_parents)
+summary(joint_lm)
 
+income_parents_lm <- lm(data = df_sample, medicine ~ income_parents)
+summary(income_parents_lm)
 ```
 
 # Question 2iv)
