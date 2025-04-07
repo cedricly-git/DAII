@@ -93,7 +93,9 @@ $W_i = \gamma_0 + \gamma_1Xi+e_i$
 
 # Question 2i)
 ```{r}
-Already done, move answer 1 here
+
+#Already done, move answer 1 here
+
 ```
 
 # Question 2ii)

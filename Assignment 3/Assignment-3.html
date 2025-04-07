@@ -757,18 +757,100 @@ df_sample &lt;- df_sample |&gt;
 </div>
 <div id="question-1a" class="section level1">
 <h1>Question 1a)</h1>
+<p>We have : <span class="math inline">\(Y_{i,1} = \beta_0 +
+\beta_1X_i+u_i\)</span>, and <span class="math inline">\(Z_i =
+5X_i\)</span></p>
+<p>We want to estimate the following new regression : <span class="math inline">\(Y_{i, 1} = \theta_0 + \theta_1Z_i+u_i\)</span></p>
+<p>We will compute the new estimation by doing a simple substitution :
+<span class="math inline">\(Y_{i,1} = \beta_0+\beta_1X_i+u_i = \beta_0 +
+\beta_1(\frac{Z_i}{5})+u_i = \beta_0 +
+(\frac{\beta_1}{5})Z_i+u_i\)</span></p>
+<p>From this, we see that <span class="math inline">\(\hat{\theta}_0 =
+\hat{\beta}_0\)</span> (the intercept doesn’t change) and that <span class="math inline">\(\hat{\theta}_1 =
+\frac{\hat{\beta}_1}{5}\)</span></p>
 </div>
 <div id="question-1b" class="section level1">
 <h1>Question 1b)</h1>
+<p>For this question, we want to show that: <span class="math inline">\(\hat{\gamma}_1 =
+\hat{\beta}_1+\hat{\alpha}_1\)</span></p>
+<p>We know the following: <span class="math inline">\(W_i =
+Y_{i,1}+Y_{i,2}\)</span></p>
+<p>As <span class="math inline">\(Y_{i,1}\)</span> and <span class="math inline">\(Y_{i,2}\)</span> are both dependent variables of
+<span class="math inline">\(X_i\)</span>, and that their regression
+curves are linear, we can simply add all the parameters (as we were
+adding two linear functions). <span class="math inline">\(W_i =
+Y_{i,1}+Y_{i,2} = (\beta_0 +
+\beta_1X_i+u_i)+(\alpha_0+\alpha_1X_i+v_i)\)</span> <span class="math inline">\(\Leftrightarrow W_i =\beta_0 + \alpha_0 + (\beta_1
++ \alpha_1)X_i + u_i + v_i\)</span></p>
+<p>We set: <span class="math inline">\(\beta_0 + \alpha_0 =
+\gamma_0\)</span> <span class="math inline">\(\beta_1 + \alpha_1 =
+\gamma_1\)</span> <span class="math inline">\(u_i+v_i = e_i\)</span></p>
+<p>Substituting our <span class="math inline">\(W_i\)</span> expression
+with the parameters we just set, we get: <span class="math inline">\(W_i
+= \gamma_0 + \gamma_1Xi+e_i\)</span></p>
 </div>
 <div id="question-2i" class="section level1">
 <h1>Question 2i)</h1>
+<pre class="r"><code>#Already done, move answer 1 here</code></pre>
 </div>
 <div id="question-2ii" class="section level1">
 <h1>Question 2ii)</h1>
+<p>We want to determine the medicine regression curve computed on the
+joint effect of travel_time and income_parents parameters, i.e.  <span class="math inline">\(medicine_i = \beta_0  + \beta_1 \cdot
+\texttt{travel_time}_i +\beta_2\cdot\texttt{income_parents}_i +
+u_i\)</span></p>
+<p><span class="math inline">\(\beta_0\)</span> = intercept of the
+regression curve</p>
+<p><span class="math inline">\(\beta_1\)</span> = coefficient on
+travel_time (the expected rate of change in medicine in a change of
+travel_time)</p>
+<p><span class="math inline">\(\beta_2\)</span> = coefficient on
+income_parents (the expected rate of change in medicine in a change of
+income_parents)</p>
 </div>
 <div id="question-2iii" class="section level1">
 <h1>Question 2iii)</h1>
+<pre class="r"><code>joint_lm &lt;- lm(data = df_sample, medicine ~ travel_time + income_parents)
+summary(joint_lm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medicine ~ travel_time + income_parents, data = df_sample)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.5406 -0.4197 -0.3476  0.5633  0.7454 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     0.5141302  0.0171959  29.898   &lt;2e-16 ***
+## travel_time    -0.0546593  0.0049510 -11.040   &lt;2e-16 ***
+## income_parents  0.0001201  0.0001325   0.907    0.364    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4895 on 12803 degrees of freedom
+## Multiple R-squared:  0.01286,    Adjusted R-squared:  0.01271 
+## F-statistic: 83.42 on 2 and 12803 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>income_parents_lm &lt;- lm(data = df_sample, medicine ~ income_parents)
+summary(income_parents_lm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medicine ~ income_parents, data = df_sample)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.5309 -0.4176 -0.3821  0.5758  0.6432 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    0.3568261  0.0096723  36.891  &lt; 2e-16 ***
+## income_parents 0.0007896  0.0001183   6.674  2.6e-11 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4918 on 12804 degrees of freedom
+## Multiple R-squared:  0.003466,   Adjusted R-squared:  0.003389 
+## F-statistic: 44.54 on 1 and 12804 DF,  p-value: 2.597e-11</code></pre>
 </div>
 <div id="question-2iv" class="section level1">
 <h1>Question 2iv)</h1>
