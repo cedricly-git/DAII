@@ -97,7 +97,7 @@ Already done, move answer 1 here
 ```
 
 # Question 2ii)
-```{r}
+
 We want to determine the medicine regression curve computed on the joint effect of travel_time and income_parents parameters, i.e. 
 $medicine_i = \beta_0  + \beta_1 \cdot \texttt{travel_time}_i +\beta_2\cdot\texttt{income_parents}_i + u_i$
 
@@ -106,7 +106,6 @@ $\beta_0$ = intercept of the regression curve
 $\beta_1$ = coefficient on travel_time (the expected rate of change in medicine in a change of travel_time)
 
 $\beta_2$ = coefficient on income_parents (the expected rate of change in medicine in a change of income_parents)
-```
 
 # Question 2iii)
 ```{r}
