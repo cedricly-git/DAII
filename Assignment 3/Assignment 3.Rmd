@@ -94,7 +94,7 @@ $W_i = \gamma_0 + \gamma_1Xi+e_i$
 # Question 2i)
 ```{r}
 
-#Already done, move answer 1 here
+#Already done, move answer 1 here, est-ce qu'on veut bouger la data cleaning et analysis ici ?
 
 ```
 
@@ -118,7 +118,34 @@ income_parents_lm <- lm(data = df_sample, medicine ~ income_parents)
 summary(income_parents_lm)
 ```
 
-# Question 2iv)
-```{r}
+*Interpretation* :
+Yes, the point estimates for income_parents differ between the two models. In the simple regression (medicine ~ income_parents), the coefficient is approximately 0.000079 and statistically significant. However, in the joint regression that also includes travel_time, the coefficient drops to 0.000012 and becomes statistically insignificant.
 
+This suggests that the relationship observed in the simple regression may be confounded by the omission of a relevant variable: travel_time. If income_parents and travel_time are correlated, omitting travel_time can bias the estimated effect of income_parents, a classic case of omitted variable bias. Once travel_time is controlled for in the joint model, it likely captures part of the variation previously attributed to income_parents, leading to a much smaller and insignificant coefficient.
+
+This indicates that parental income alone may not significantly influence the probability of working in medicine once geographic access (as captured by travel time) is taken into account.
+
+# Question 2iv)
+*Description of the test* :
+To test whether income_parents is correlated with travel_time, we regress travel_time on income_parents. The null hypothesis  H_0 states that there is no correlation (α_1=0), while the alternative H_1 states that α_1 ≠ 0.
+
+After running the regression, we examine the coefficient of income_parents. If the p-value associated with the coefficient is less than 0.05, we reject the null hypothesis and conclude that there is a statistically significant correlation between the two variables.
+
+If the p-value is greater than 0.05, we fail to reject the null and conclude that there is no strong statistical evidence of correlation. This result helps us understand whether multicollinearity might affect the interpretation of regression coefficients in our earlier models.
+
+```{r}
+# Test for correlation
+correlation_test <- lm(travel_time ~ income_parents, data = df_sample)
+summary(correlation_test)
 ```
+*Interpretation* :
+We test whether income_parents is correlated with travel_time using a linear regression:
+
+$$
+\texttt{travel_time}_i = \alpha_0  + \alpha_1 \cdot \texttt{income_parents}_i + u_i
+$$
+The null hypothesis $\textttt{H}_o : \alpha_1 = 0 $ implies no correlation. The alternative hypothesis $\textttt{H}_1 : \alpha_1 \neq 0$ implies a correlation exists.
+
+From the regression output, the estimated coefficient for income_parents is -0.0122, with a p-value < 2e-16, indicating strong statistical significance. We reject the null hypothesis and conclude that there is a significant negative correlation between parental income and travel time.
+
+This suggests that students from higher-income families tend to have shorter travel times, which may reflect greater access to transportation or closer proximity to medical institutions. This correlation helps explain why the effect of income_parents changed in the joint regression from part (iii), due to overlapping explanatory power with travel_time.

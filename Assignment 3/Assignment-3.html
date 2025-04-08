@@ -771,8 +771,8 @@ df_sample &lt;- df_sample |&gt;
 </div>
 <div id="question-1b" class="section level1">
 <h1>Question 1b)</h1>
-<p>For this question, we want to show that: <span class="math inline">\(\hat{\gamma}_1 =
-\hat{\beta}_1+\hat{\alpha}_1\)</span></p>
+<p>For this question, we want to show that: <span class="math display">\[\hat{\gamma}_1 =
+\hat{\beta}_1+\hat{\alpha}_1\]</span></p>
 <p>We know the following: <span class="math inline">\(W_i =
 Y_{i,1}+Y_{i,2}\)</span></p>
 <p>As <span class="math inline">\(Y_{i,1}\)</span> and <span class="math inline">\(Y_{i,2}\)</span> are both dependent variables of
@@ -792,7 +792,7 @@ with the parameters we just set, we get: <span class="math inline">\(W_i
 </div>
 <div id="question-2i" class="section level1">
 <h1>Question 2i)</h1>
-<pre class="r"><code>#Already done, move answer 1 here</code></pre>
+<pre class="r"><code>#Already done, move answer 1 here, est-ce qu&#39;on veut bouger la data cleaning et analysis ici ?</code></pre>
 </div>
 <div id="question-2ii" class="section level1">
 <h1>Question 2ii)</h1>
@@ -852,9 +852,65 @@ summary(income_parents_lm)</code></pre>
 ## Residual standard error: 0.4918 on 12804 degrees of freedom
 ## Multiple R-squared:  0.003466,   Adjusted R-squared:  0.003389 
 ## F-statistic: 44.54 on 1 and 12804 DF,  p-value: 2.597e-11</code></pre>
+<p><em>Interpretation</em> : Yes, the point estimates for income_parents
+differ between the two models. In the simple regression (medicine ~
+income_parents), the coefficient is approximately 0.000079 and
+statistically significant. However, in the joint regression that also
+includes travel_time, the coefficient drops to 0.000012 and becomes
+statistically insignificant.</p>
+<p>This suggests that the relationship observed in the simple regression
+may be confounded by the omission of a relevant variable: travel_time.
+If income_parents and travel_time are correlated, omitting travel_time
+can bias the estimated effect of income_parents, a classic case of
+omitted variable bias. Once travel_time is controlled for in the joint
+model, it likely captures part of the variation previously attributed to
+income_parents, leading to a much smaller and insignificant
+coefficient.</p>
+<p>This indicates that parental income alone may not significantly
+influence the probability of working in medicine once geographic access
+(as captured by travel time) is taken into account.</p>
 </div>
 <div id="question-2iv" class="section level1">
 <h1>Question 2iv)</h1>
+<p><em>Description of the test</em> : To test whether income_parents is
+correlated with travel_time, we regress travel_time on income_parents.
+The null hypothesis H_0 states that there is no correlation (α_1=0),
+while the alternative H_1 states that α_1 ≠ 0.</p>
+<p>After running the regression, we examine the coefficient of
+income_parents. If the p-value associated with the coefficient is less
+than 0.05, we reject the null hypothesis and conclude that there is a
+statistically significant correlation between the two variables.</p>
+<p>If the p-value is greater than 0.05, we fail to reject the null and
+conclude that there is no strong statistical evidence of correlation.
+This result helps us understand whether multicollinearity might affect
+the interpretation of regression coefficients in our earlier models.</p>
+<pre class="r"><code># Test for correlation
+correlation_test &lt;- lm(travel_time ~ income_parents, data = df_sample)
+summary(correlation_test)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = travel_time ~ income_parents, data = df_sample)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.87790 -0.57578  0.04471  0.61360  2.56317 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     2.8779008  0.0171841  167.47   &lt;2e-16 ***
+## income_parents -0.0122485  0.0002102  -58.27   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.8738 on 12804 degrees of freedom
+## Multiple R-squared:  0.2096, Adjusted R-squared:  0.2095 
+## F-statistic:  3395 on 1 and 12804 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><em>Interpretation</em> : We test whether income_parents is
+correlated with travel_time using a linear regression:</p>
+<p><span class="math display">\[
+\texttt{travel_time}_i = \alpha_0  + \alpha_1 \cdot
+\texttt{income_parents}_i + u_i
+\]</span></p>
 </div>
 
 
