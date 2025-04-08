@@ -84,8 +84,8 @@ $W_i = Y_{i,1}+Y_{i,2} = (\beta_0 + \beta_1X_i+u_i)+(\alpha_0+\alpha_1X_i+v_i)$
 $\Leftrightarrow W_i =\beta_0 + \alpha_0 + (\beta_1 + \alpha_1)X_i + u_i + v_i$ 
 
 We set:
-$\beta_0 + \alpha_0 = \gamma_0$
-$\beta_1 + \alpha_1 = \gamma_1$
+$\beta_0 + \alpha_0 = \gamma_0$,
+$\beta_1 + \alpha_1 = \gamma_1$,
 $u_i+v_i = e_i$
 
 Substituting our $W_i$ expression with the parameters we just set, we get:
