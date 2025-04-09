@@ -143,7 +143,11 @@ We test whether income_parents is correlated with travel_time using a linear reg
 $$
 \texttt{travel_time}_i = \alpha_0  + \alpha_1 \cdot \texttt{income_parents}_i + u_i
 $$
-The null hypothesis $\textttt{H}_o : \alpha_1 = 0 $ implies no correlation. The alternative hypothesis $\{H}_1 : \alpha_1 \neq 0$ implies a correlation exists.
+The null hypothesis :
+$\texttt{H}_0 : \alpha_1 = 0$
+implies no correlation. The alternative hypothesis 
+$\texttt{H}_1 : \alpha_1 \neq 0$ 
+implies a correlation exists.
 
 From the regression output, the estimated coefficient for income_parents is -0.0122, with a p-value < 2e-16, indicating strong statistical significance. We reject the null hypothesis and conclude that there is a significant negative correlation between parental income and travel time.
 
