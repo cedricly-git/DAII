@@ -558,9 +558,47 @@ skimr::skim(df3)</code></pre>
 </tr>
 </tbody>
 </table>
-<div id="cleaning-data" class="section level2">
-<h2>1. Cleaning Data</h2>
-<pre class="r"><code># Check &#39;medicine&#39; variable format
+</div>
+<div id="question-1a" class="section level1">
+<h1>Question 1a)</h1>
+<p>We have : <span class="math inline">\(Y_{i,1} = \beta_0 +
+\beta_1X_i+u_i\)</span>, and <span class="math inline">\(Z_i =
+5X_i\)</span></p>
+<p>We want to estimate the following new regression : <span class="math inline">\(Y_{i, 1} = \theta_0 + \theta_1Z_i+u_i\)</span></p>
+<p>We will compute the new estimation by doing a simple substitution :
+<span class="math inline">\(Y_{i,1} = \beta_0+\beta_1X_i+u_i = \beta_0 +
+\beta_1(\frac{Z_i}{5})+u_i = \beta_0 +
+(\frac{\beta_1}{5})Z_i+u_i\)</span></p>
+<p>From this, we see that <span class="math inline">\(\hat{\theta}_0 =
+\hat{\beta}_0\)</span> (the intercept doesn’t change) and that <span class="math inline">\(\hat{\theta}_1 =
+\frac{\hat{\beta}_1}{5}\)</span></p>
+</div>
+<div id="question-1b" class="section level1">
+<h1>Question 1b)</h1>
+<p>For this question, we want to show that: <span class="math inline">\(\hat{\gamma}_1 =
+\hat{\beta}_1+\hat{\alpha}_1\)</span></p>
+<p>We know the following: <span class="math inline">\(W_i =
+Y_{i,1}+Y_{i,2}\)</span></p>
+<p>As <span class="math inline">\(Y_{i,1}\)</span> and <span class="math inline">\(Y_{i,2}\)</span> are both dependent variables of
+<span class="math inline">\(X_i\)</span>, and that their regression
+curves are linear, we can simply add all the parameters (as we were
+adding two linear functions). <span class="math inline">\(W_i =
+Y_{i,1}+Y_{i,2} = (\beta_0 +
+\beta_1X_i+u_i)+(\alpha_0+\alpha_1X_i+v_i)\)</span> <span class="math inline">\(\Leftrightarrow W_i =\beta_0 + \alpha_0 + (\beta_1
++ \alpha_1)X_i + u_i + v_i\)</span></p>
+<p>We set: <span class="math inline">\(\beta_0 + \alpha_0 =
+\gamma_0\)</span>, <span class="math inline">\(\beta_1 + \alpha_1 =
+\gamma_1\)</span>, <span class="math inline">\(u_i+v_i =
+e_i\)</span></p>
+<p>Substituting our <span class="math inline">\(W_i\)</span> expression
+with the parameters we just set, we get: <span class="math inline">\(W_i
+= \gamma_0 + \gamma_1Xi+e_i\)</span></p>
+</div>
+<div id="question-2i" class="section level1">
+<h1>Question 2i)</h1>
+<pre class="r"><code># Cleaning Data
+
+# Check &#39;medicine&#39; variable format
 unique(df3[&#39;medicine&#39;])</code></pre>
 <pre><code>## # A tibble: 2 × 1
 ##   medicine
@@ -754,52 +792,13 @@ df_sample &lt;- df_sample |&gt;
   mutate(income_parents = income_parent1 + income_parent2,
          travel_sq = travel_time^2)</code></pre>
 </div>
-</div>
-<div id="question-1a" class="section level1">
-<h1>Question 1a)</h1>
-<p>We have : <span class="math inline">\(Y_{i,1} = \beta_0 +
-\beta_1X_i+u_i\)</span>, and <span class="math inline">\(Z_i =
-5X_i\)</span></p>
-<p>We want to estimate the following new regression : <span class="math inline">\(Y_{i, 1} = \theta_0 + \theta_1Z_i+u_i\)</span></p>
-<p>We will compute the new estimation by doing a simple substitution :
-<span class="math inline">\(Y_{i,1} = \beta_0+\beta_1X_i+u_i = \beta_0 +
-\beta_1(\frac{Z_i}{5})+u_i = \beta_0 +
-(\frac{\beta_1}{5})Z_i+u_i\)</span></p>
-<p>From this, we see that <span class="math inline">\(\hat{\theta}_0 =
-\hat{\beta}_0\)</span> (the intercept doesn’t change) and that <span class="math inline">\(\hat{\theta}_1 =
-\frac{\hat{\beta}_1}{5}\)</span></p>
-</div>
-<div id="question-1b" class="section level1">
-<h1>Question 1b)</h1>
-<p>For this question, we want to show that: <span class="math display">\[\hat{\gamma}_1 =
-\hat{\beta}_1+\hat{\alpha}_1\]</span></p>
-<p>We know the following: <span class="math inline">\(W_i =
-Y_{i,1}+Y_{i,2}\)</span></p>
-<p>As <span class="math inline">\(Y_{i,1}\)</span> and <span class="math inline">\(Y_{i,2}\)</span> are both dependent variables of
-<span class="math inline">\(X_i\)</span>, and that their regression
-curves are linear, we can simply add all the parameters (as we were
-adding two linear functions). <span class="math inline">\(W_i =
-Y_{i,1}+Y_{i,2} = (\beta_0 +
-\beta_1X_i+u_i)+(\alpha_0+\alpha_1X_i+v_i)\)</span> <span class="math inline">\(\Leftrightarrow W_i =\beta_0 + \alpha_0 + (\beta_1
-+ \alpha_1)X_i + u_i + v_i\)</span></p>
-<p>We set: <span class="math inline">\(\beta_0 + \alpha_0 =
-\gamma_0\)</span>, <span class="math inline">\(\beta_1 + \alpha_1 =
-\gamma_1\)</span>, <span class="math inline">\(u_i+v_i =
-e_i\)</span></p>
-<p>Substituting our <span class="math inline">\(W_i\)</span> expression
-with the parameters we just set, we get: <span class="math inline">\(W_i
-= \gamma_0 + \gamma_1Xi+e_i\)</span></p>
-</div>
-<div id="question-2i" class="section level1">
-<h1>Question 2i)</h1>
-<pre class="r"><code>#Already done, move answer 1 here, est-ce qu&#39;on veut bouger la data cleaning et analysis ici ?</code></pre>
-</div>
 <div id="question-2ii" class="section level1">
 <h1>Question 2ii)</h1>
 <p>We want to determine the medicine regression curve computed on the
-joint effect of travel_time and income_parents parameters, i.e.  <span class="math inline">\(medicine_i = \beta_0  + \beta_1 \cdot
-\texttt{travel_time}_i +\beta_2\cdot\texttt{income_parents}_i +
-u_i\)</span></p>
+joint effect of travel_time and income_parents parameters, i.e.  <span class="math display">\[
+medicine_i = \beta_0  + \beta_1 \cdot \texttt{travel_time}_i
++\beta_2\cdot\texttt{income_parents}_i + u_i
+\]</span></p>
 <p><span class="math inline">\(\beta_0\)</span> = intercept of the
 regression curve</p>
 <p><span class="math inline">\(\beta_1\)</span> = coefficient on
@@ -808,6 +807,7 @@ travel_time)</p>
 <p><span class="math inline">\(\beta_2\)</span> = coefficient on
 income_parents (the expected rate of change in medicine in a change of
 income_parents)</p>
+<p><span class="math inline">\(\u_i\)</span> = the error term</p>
 </div>
 <div id="question-2iii" class="section level1">
 <h1>Question 2iii)</h1>
@@ -874,8 +874,10 @@ influence the probability of working in medicine once geographic access
 <h1>Question 2iv)</h1>
 <p><em>Description of the test</em> : To test whether income_parents is
 correlated with travel_time, we regress travel_time on income_parents.
-The null hypothesis H_0 states that there is no correlation (α_1=0),
-while the alternative H_1 states that α_1 ≠ 0.</p>
+The null hypothesis <span class="math inline">\(H_0\)</span> states that
+there is no correlation <span class="math inline">\((α_1=0)\)</span> ,
+while the alternative <span class="math inline">\(H_1\)</span> states
+<span class="math inline">\(\alpha_1 \neq 0\)</span>.</p>
 <p>After running the regression, we examine the coefficient of
 income_parents. If the p-value associated with the coefficient is less
 than 0.05, we reject the null hypothesis and conclude that there is a
@@ -910,7 +912,20 @@ correlated with travel_time using a linear regression:</p>
 <p><span class="math display">\[
 \texttt{travel_time}_i = \alpha_0  + \alpha_1 \cdot
 \texttt{income_parents}_i + u_i
-\]</span></p>
+\]</span> The null hypothesis $_o : _1 = 0 $ implies no correlation. The
+alternative hypothesis <span class="math inline">\(\{H}_1 : \alpha_1
+\neq 0\)</span> implies a correlation exists.</p>
+<p>From the regression output, the estimated coefficient for
+income_parents is -0.0122, with a p-value &lt; 2e-16, indicating strong
+statistical significance. We reject the null hypothesis and conclude
+that there is a significant negative correlation between parental income
+and travel time.</p>
+<p>This suggests that students from higher-income families tend to have
+shorter travel times, which may reflect greater access to transportation
+or closer proximity to medical institutions. This correlation helps
+explain why the effect of income_parents changed in the joint regression
+from part (iii), due to overlapping explanatory power with
+travel_time.</p>
 </div>
 
 

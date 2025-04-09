@@ -25,39 +25,6 @@ View(df3)
 skimr::skim(df3)
 ```
 
-## 1. Cleaning Data
-```{r}
-# Check 'medicine' variable format
-unique(df3['medicine'])
-
-# Encode 'medicine' variable
-df3 <- mutate(df3, medicine = ifelse(medicine == "Yes", 1, 0))
-
-
-# Set missing values for income variables
-df3 <- mutate(df3, income = ifelse(income == -9999999, NaN, income)) %>%
-  mutate(income_parent1 = ifelse(income_parent1 == -9999999, NaN, income_parent1)) %>%
-  mutate(income_parent2 = ifelse(income_parent2 == -9999999, NaN, income_parent2))
-
-
-# Negative travel time
-df3 <- mutate(df3, travel_time = ifelse(travel_time < 0, NaN, travel_time))                    
-
-
-# Omit missing variables 
-df_sample <- df3 |>
-  na.omit()
-
-
-# Summarize the data again
-skimr:: skim(df_sample)
-
-# create new variables
-df_sample <- df_sample |>
-  mutate(income_parents = income_parent1 + income_parent2,
-         travel_sq = travel_time^2)
-```
-
 # Question 1a)
 
 We have : 
@@ -91,23 +58,55 @@ $u_i+v_i = e_i$
 Substituting our $W_i$ expression with the parameters we just set, we get:
 $W_i = \gamma_0 + \gamma_1Xi+e_i$
 
-# Question 2i)
+# Question 2i) 
 ```{r}
+# Cleaning Data
 
-#Already done, move answer 1 here, est-ce qu'on veut bouger la data cleaning et analysis ici ?
+# Check 'medicine' variable format
+unique(df3['medicine'])
 
+# Encode 'medicine' variable
+df3 <- mutate(df3, medicine = ifelse(medicine == "Yes", 1, 0))
+
+
+# Set missing values for income variables
+df3 <- mutate(df3, income = ifelse(income == -9999999, NaN, income)) %>%
+  mutate(income_parent1 = ifelse(income_parent1 == -9999999, NaN, income_parent1)) %>%
+  mutate(income_parent2 = ifelse(income_parent2 == -9999999, NaN, income_parent2))
+
+
+# Negative travel time
+df3 <- mutate(df3, travel_time = ifelse(travel_time < 0, NaN, travel_time))                    
+
+
+# Omit missing variables 
+df_sample <- df3 |>
+  na.omit()
+
+
+# Summarize the data again
+skimr:: skim(df_sample)
+
+# create new variables
+df_sample <- df_sample |>
+  mutate(income_parents = income_parent1 + income_parent2,
+         travel_sq = travel_time^2)
 ```
 
 # Question 2ii)
 
 We want to determine the medicine regression curve computed on the joint effect of travel_time and income_parents parameters, i.e. 
-$medicine_i = \beta_0  + \beta_1 \cdot \texttt{travel_time}_i +\beta_2\cdot\texttt{income_parents}_i + u_i$
+$$
+medicine_i = \beta_0  + \beta_1 \cdot \texttt{travel_time}_i +\beta_2\cdot\texttt{income_parents}_i + u_i
+$$
 
-$\beta_0$ = intercept of the regression curve
+$\beta_0$ = intercept of the regression curve 
 
 $\beta_1$ = coefficient on travel_time (the expected rate of change in medicine in a change of travel_time)
 
 $\beta_2$ = coefficient on income_parents (the expected rate of change in medicine in a change of income_parents)
+
+$\u_i$ = the error term
 
 # Question 2iii)
 ```{r}
@@ -127,7 +126,7 @@ This indicates that parental income alone may not significantly influence the pr
 
 # Question 2iv)
 *Description of the test* :
-To test whether income_parents is correlated with travel_time, we regress travel_time on income_parents. The null hypothesis  H_0 states that there is no correlation (α_1=0), while the alternative H_1 states that α_1 ≠ 0.
+To test whether income_parents is correlated with travel_time, we regress travel_time on income_parents. The null hypothesis  $H_0$ states that there is no correlation $(α_1=0)$ , while the alternative $H_1$ states $\alpha_1 \neq 0$.
 
 After running the regression, we examine the coefficient of income_parents. If the p-value associated with the coefficient is less than 0.05, we reject the null hypothesis and conclude that there is a statistically significant correlation between the two variables.
 
@@ -144,7 +143,7 @@ We test whether income_parents is correlated with travel_time using a linear reg
 $$
 \texttt{travel_time}_i = \alpha_0  + \alpha_1 \cdot \texttt{income_parents}_i + u_i
 $$
-The null hypothesis $\textttt{H}_o : \alpha_1 = 0 $ implies no correlation. The alternative hypothesis $\textttt{H}_1 : \alpha_1 \neq 0$ implies a correlation exists.
+The null hypothesis $\textttt{H}_o : \alpha_1 = 0 $ implies no correlation. The alternative hypothesis $\{H}_1 : \alpha_1 \neq 0$ implies a correlation exists.
 
 From the regression output, the estimated coefficient for income_parents is -0.0122, with a p-value < 2e-16, indicating strong statistical significance. We reject the null hypothesis and conclude that there is a significant negative correlation between parental income and travel time.
 
