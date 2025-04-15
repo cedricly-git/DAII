@@ -1,0 +1,21 @@
+---
+title: "Assignment 4"
+author: 
+  - Simon Alain Roger Gerdolle 23-611-940
+  - Leonardo Gonnelli 23-617-111
+  - Cédric Ly 23-615-487
+date: "2025-04-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Import packages
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+```
+```
