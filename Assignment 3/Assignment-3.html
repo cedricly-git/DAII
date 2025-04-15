@@ -807,7 +807,8 @@ travel_time)</p>
 <p><span class="math inline">\(\beta_2\)</span> = coefficient on
 income_parents (the expected rate of change in medicine in a change of
 income_parents)</p>
-<p><span class="math inline">\(\u_i\)</span> = the error term</p>
+<p><span class="math inline">\(\texttt{u}_i\)</span> = the error
+term</p>
 </div>
 <div id="question-2iii" class="section level1">
 <h1>Question 2iii)</h1>
@@ -852,12 +853,13 @@ summary(income_parents_lm)</code></pre>
 ## Residual standard error: 0.4918 on 12804 degrees of freedom
 ## Multiple R-squared:  0.003466,   Adjusted R-squared:  0.003389 
 ## F-statistic: 44.54 on 1 and 12804 DF,  p-value: 2.597e-11</code></pre>
-<p><em>Interpretation</em> : Yes, the point estimates for income_parents
-differ between the two models. In the simple regression (medicine ~
-income_parents), the coefficient is approximately 0.000079 and
-statistically significant. However, in the joint regression that also
-includes travel_time, the coefficient drops to 0.000012 and becomes
-statistically insignificant.</p>
+<p><em>Interpretation</em> :</p>
+<p>Yes, the point estimates for income_parents differ between the two
+models. In the simple regression (medicine ~ income_parents), the
+coefficient is approximately 0.000079 and statistically significant.
+However, in the joint regression that also includes travel_time, the
+coefficient drops to 0.000012 and becomes statistically
+insignificant.</p>
 <p>This suggests that the relationship observed in the simple regression
 may be confounded by the omission of a relevant variable: travel_time.
 If income_parents and travel_time are correlated, omitting travel_time
@@ -872,12 +874,11 @@ influence the probability of working in medicine once geographic access
 </div>
 <div id="question-2iv" class="section level1">
 <h1>Question 2iv)</h1>
-<p><em>Description of the test</em> : To test whether income_parents is
-correlated with travel_time, we regress travel_time on income_parents.
-The null hypothesis <span class="math inline">\(H_0\)</span> states that
-there is no correlation <span class="math inline">\((α_1=0)\)</span> ,
-while the alternative <span class="math inline">\(H_1\)</span> states
-<span class="math inline">\(\alpha_1 \neq 0\)</span>.</p>
+<p><em>Description of the test</em> :</p>
+<p>To test whether income_parents is correlated with travel_time, we
+regress travel_time on income_parents. The null hypothesis <span class="math inline">\(H_0\)</span> states that there is no correlation
+<span class="math inline">\((α_1=0)\)</span> , while the alternative
+<span class="math inline">\(H_1\)</span> states <span class="math inline">\(\alpha_1 \neq 0\)</span>.</p>
 <p>After running the regression, we examine the coefficient of
 income_parents. If the p-value associated with the coefficient is less
 than 0.05, we reject the null hypothesis and conclude that there is a
@@ -907,8 +908,9 @@ summary(correlation_test)</code></pre>
 ## Residual standard error: 0.8738 on 12804 degrees of freedom
 ## Multiple R-squared:  0.2096, Adjusted R-squared:  0.2095 
 ## F-statistic:  3395 on 1 and 12804 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p><em>Interpretation</em> : We test whether income_parents is
-correlated with travel_time using a linear regression:</p>
+<p><em>Interpretation</em> :</p>
+<p>We test whether income_parents is correlated with travel_time using a
+linear regression:</p>
 <p><span class="math display">\[
 \texttt{travel_time}_i = \alpha_0  + \alpha_1 \cdot
 \texttt{income_parents}_i + u_i

@@ -106,7 +106,7 @@ $\beta_1$ = coefficient on travel_time (the expected rate of change in medicine 
 
 $\beta_2$ = coefficient on income_parents (the expected rate of change in medicine in a change of income_parents)
 
-$\u_i$ = the error term
+$\texttt{u}_i$ = the error term
 
 # Question 2iii)
 ```{r}
@@ -118,6 +118,7 @@ summary(income_parents_lm)
 ```
 
 *Interpretation* :
+
 Yes, the point estimates for income_parents differ between the two models. In the simple regression (medicine ~ income_parents), the coefficient is approximately 0.000079 and statistically significant. However, in the joint regression that also includes travel_time, the coefficient drops to 0.000012 and becomes statistically insignificant.
 
 This suggests that the relationship observed in the simple regression may be confounded by the omission of a relevant variable: travel_time. If income_parents and travel_time are correlated, omitting travel_time can bias the estimated effect of income_parents, a classic case of omitted variable bias. Once travel_time is controlled for in the joint model, it likely captures part of the variation previously attributed to income_parents, leading to a much smaller and insignificant coefficient.
@@ -126,6 +127,7 @@ This indicates that parental income alone may not significantly influence the pr
 
 # Question 2iv)
 *Description of the test* :
+
 To test whether income_parents is correlated with travel_time, we regress travel_time on income_parents. The null hypothesis  $H_0$ states that there is no correlation $(α_1=0)$ , while the alternative $H_1$ states $\alpha_1 \neq 0$.
 
 After running the regression, we examine the coefficient of income_parents. If the p-value associated with the coefficient is less than 0.05, we reject the null hypothesis and conclude that there is a statistically significant correlation between the two variables.
@@ -138,6 +140,7 @@ correlation_test <- lm(travel_time ~ income_parents, data = df_sample)
 summary(correlation_test)
 ```
 *Interpretation* :
+
 We test whether income_parents is correlated with travel_time using a linear regression:
 
 $$
