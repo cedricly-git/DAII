@@ -14,6 +14,9 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 ```{r}
 library(tidyverse)
+library(haven)
+library(skimr)
+library(AER)
 ```
 
 Import the data:
@@ -29,7 +32,8 @@ As we are trying to understand the correlation (or maybe further the causality) 
 
 ```{r}
 df_clean <- df %>%
-  filter(income>=0)
+  filter(income>=0)|>
+  filter(hhincome>=0)
 
 skimr::skim(df_clean)
 view(df_clean)
@@ -98,6 +102,63 @@ We observe that the the estimated interaction $\alpha_3 = -0.0008$ with a se of 
 Because the p-value is very high compared to the conventional significance level (0.05), **we fail to reject the null hypothesis** $H_0$, there is no statistical evidence that the effect of scholarship on income has changed over time.
 
 *Part 1.3*
-To estimate the causal effect, we consider the following model:
+The goal of this analysis is to estimate the causal effect of obtaining a college degree on an individual's income ten years after high school graduation. The government seeks to understand whether higher education leads to improved economic outcomes, using data from a randomized scholarship program.
+
+A naïve estimation of the relationship between education and income using ordinary least squares (OLS) would involve regressing income directly on college attainment:
 
 $$income = \beta_0 + \beta_1 \cdot college_i + \epsilon_i $$
+However, college attendance is a choice variable likely influenced by unobserved factors such as motivation, ability, or family support, which also affect income. This raises endogeneity concerns, and any estimate of $\beta_1$ using OLS would be biased due to omitted variable bias.
+
+To address this, we use a two-stage least squares (2SLS) approach, leveraging the randomized assignment of scholarship values as an instrumental variable (IV). Since scholarship amounts were randomly allocated among those who passed an initial eligibility screening, they serve as an exogenous source of variation in college attendance.
+
+The two stages are specified as follows:
+
+First Stage:
+$$college_i = \pi_0 + \pi_1 \cdot scholarship_i + \upsilon_i $$
+Second Stage:
+$$income = \beta_0 + \beta_1 \cdot \hat{college}_i + \epsilon_i $$
+$\hat{college}_i$ is the predicted probability of attending college based on the scholarship value. This approach identifies the Local Average Treatment Effect (LATE) — the causal effect of college for those individuals whose college attendance decisions were influenced by the amount of scholarship received.
+
+
+```{r}
+#OLS Estimate
+ols_model <- lm(income ~ college, data = df_clean)
+summary(ols_model)
+```
+Estimate: 41.51 (SE = 0.53, p < 2e-16)
+*Interpretation:* 
+College graduates earn $41,511 more annually than non-graduates, on average. However, this estimate may be upward biased due to unobserved factors like motivation or ability.
+
+```{r}
+#First Stage (Relevance Check)
+first_stage <- lm(college ~ scholarship, data = df_clean)
+summary(first_stage)
+```
+Estimate of $\pi_1$ (scholarship → college): 0.00958 (p < 2e-16)
+F-statistic: 278.1
+The instrument is strong and statistically significant, satisfying the relevance condition. The F-statistic far exceeds the conventional threshold of 10, indicating we are unlikely to face a weak instrument problem.
+
+```{r}
+iv_model <- ivreg(income ~ college | scholarship, data = df_clean)
+summary(iv_model)
+```
+Estimate: 15.38 (SE = 4.49, p = 0.0006)
+*Interpretation: *
+Receiving a college degree causes a $15,381 increase in annual income for those influenced by the scholarship (the compilers). This estimate is considerably lower than the OLS estimate, suggesting that the OLS model may overstate the returns due to selection bias.
+
+```{r}
+iv_model_controls <- ivreg(income ~ college + hhincome + race | scholarship + hhincome + race, data = df_clean)
+summary(iv_model_controls)
+```
+college coefficient: 21.00 (SE = 2.26, p < 2e-16)
+
+These results strongly support the hypothesis that college education increases income. However, the comparison between OLS and IV estimates reveals important insights:
+
+- OLS likely overstates the effect due to upward bias from omitted factors (e.g., ability, motivation).
+- IV gives a more credible estimate of the causal effect by isolating variation in college attendance due to a randomized instrument.
+- The LATE interpretation means this effect applies specifically to individuals whose decision to attend college was affected by the scholarship amount i.e., marginal students.
+
+*Conclusion:*
+Using a credible instrument — randomized scholarship values — we estimate that obtaining a college degree causally increases income by between 15,000 and 21,000 dollars per year for marginal students. These results are statistically significant and robust to the inclusion of important controls.
+
+This finding supports policies that lower financial barriers to higher education, especially for students on the margin of college attendance. However, policymakers should note that these benefits apply most clearly to individuals responsive to financial incentives and may not generalize to all students.
