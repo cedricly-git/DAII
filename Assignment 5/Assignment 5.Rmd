@@ -26,7 +26,7 @@ skimr::skim(df)
 view(df)
 ```
 
-*Part 0*
+# Part 0
 
 As we are trying to understand the correlation (or maybe further the causality) between education and income, we will need to drop the observations where one of those variables are unknown. We see that there is 1340 observations where the income and college variables are unknown. **For now, we don't know if we need to drop the observations where hhincome is unknown**.
 
@@ -40,7 +40,7 @@ view(df_clean)
 ```
 We can now proceed to the next task.
 
-*Part 1.1*
+# Part 1.1
 
 We want to investigate whether an increase in the scholarship value received by a student at the beginning at college has an effect on their income 10 years later. To do so, we estimate the following linear regression model where income 10 years later is regressed on the scholarship amount received.
 
@@ -70,7 +70,7 @@ $\alpha_1$ = 0.16145: the estimated coefficient for scholarship indicates that f
 
 As the p-value is below 0.001, the result is statistically significant. However, the R-squared is very low (R^2 = 0.0007), suggesting that scholarship alone explains only a small share of the variation in income—many other factors likely play a more important role.
 
-*Part 1.2*
+# Part 1.2
 
 For this task, we are asked to check whether the effect of a scholarship on income has changed over time. In order to do this, we need to estimate the following multivariate linear regression model :
 $$ income = \alpha_0 + \alpha_1\cdot scholarship + \alpha_2 \cdot year + \alpha_3 \cdot (scholarship \times year) + u$$
@@ -101,7 +101,7 @@ summary(model_interaction)
 We observe that the the estimated interaction $\alpha_3 = -0.0008$ with a se of 0.0093, a t-statistic of -0.086 and a **p-value of 0.9317**.
 Because the p-value is very high compared to the conventional significance level (0.05), **we fail to reject the null hypothesis** $H_0$, there is no statistical evidence that the effect of scholarship on income has changed over time.
 
-*Part 1.3*
+# Part 1.3
 The goal of this analysis is to estimate the causal effect of obtaining a college degree on an individual's income ten years after high school graduation. The government seeks to understand whether higher education leads to improved economic outcomes, using data from a randomized scholarship program.
 
 A naïve estimation of the relationship between education and income using ordinary least squares (OLS) would involve regressing income directly on college attainment:
