@@ -32,8 +32,7 @@ As we are trying to understand the correlation (or maybe further the causality) 
 
 ```{r}
 df_clean <- df %>%
-  filter(income>=0)|>
-  filter(hhincome>=0)
+  filter(income>=0)
 
 skimr::skim(df_clean)
 view(df_clean)
@@ -44,11 +43,10 @@ We can now proceed to the next task.
 
 We want to investigate whether an increase in the scholarship value received by a student at the beginning at college has an effect on their income 10 years later. To do so, we estimate the following linear regression model where income 10 years later is regressed on the scholarship amount received.
 
-$$income = \alpha_0 + \alpha_1scholarship + u $$
+$$income = \alpha_0 + \alpha_1 \cdot scholarship + u$$
 
 ```{r}
 model <- lm(data = df_clean, income ~ scholarship)
-
 summary(model)
 ```
 Here, the intercept $\alpha_0$ shows the expected income for an individual who would have received 0USD of scholarship value, which is irrelevant for our analysis as we are working only on ex-students that received at least 10kUSD of scholarship value. To ensure the intercept is interpretable, we center the scholarship variable at its minimum observed value. 
@@ -159,6 +157,6 @@ These results strongly support the hypothesis that college education increases i
 - The LATE interpretation means this effect applies specifically to individuals whose decision to attend college was affected by the scholarship amount i.e., marginal students.
 
 *Conclusion:*
-Using a credible instrument — randomized scholarship values — we estimate that obtaining a college degree causally increases income by between 15,000 and 21,000 dollars per year for marginal students. These results are statistically significant and robust to the inclusion of important controls.
+Using a credible instrument — randomized scholarship values — we estimate that obtaining a college degree causally increases income by between 15,000USD and 21,000USD per year for marginal students. These results are statistically significant and robust to the inclusion of important controls.
 
 This finding supports policies that lower financial barriers to higher education, especially for students on the margin of college attendance. However, policymakers should note that these benefits apply most clearly to individuals responsive to financial incentives and may not generalize to all students.
