@@ -76,7 +76,7 @@ The results are the same, except we now have the exact intercept for the minimum
 
 $\alpha_0$ = 125.351: the estimated income 10 years after high school graduation for a student who received the minimum scholarship amount (10,000 USD).
 
-$\alpha_1$ = 0.14736: the estimated coefficient for scholarship indicates that for each additional 1,000 USD received, future income increases by approximately 161.45 USD.
+$\alpha_1$ = 0.14736: the estimated coefficient for scholarship indicates that for each additional 1,000 USD received, future income increases by approximately 147.36 USD.
 
 As the p-value is below 0.001, the result is statistically significant. However, the R-squared is very low (R^2 = 0.0007), suggesting that scholarship alone explains only a small share of the variation in income—many other factors likely play a more important role.
 
