@@ -529,7 +529,14 @@ skimr::skim(df)</code></pre>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>view(df)</code></pre>
+<pre class="r"><code>df_clean &lt;- df %&gt;%
+  mutate(
+    income = na_if(income, -9999999),
+    hhincome = na_if(hhincome, -9999999),
+    college = na_if(college, -1)
+  ) %&gt;%
+  drop_na(income, hhincome, college, scholarship)
+View(df)</code></pre>
 <div id="part-0" class="section level1">
 <h1>Part 0</h1>
 <p>As we are trying to understand the correlation (or maybe further the
@@ -539,7 +546,12 @@ is 1340 observations where the income and college variables are unknown.
 <strong>For now, we don’t know if we need to drop the observations where
 hhincome is unknown</strong>.</p>
 <pre class="r"><code>df_clean &lt;- df %&gt;%
-  filter(income&gt;=0)
+  mutate(
+    income = na_if(income, -9999999),
+    hhincome = na_if(hhincome, -9999999),
+    college = na_if(college, -1)
+  ) %&gt;%
+  drop_na(income, hhincome, college, scholarship)
 
 skimr::skim(df_clean)</code></pre>
 <table>
@@ -551,7 +563,7 @@ skimr::skim(df_clean)</code></pre>
 </tr>
 <tr class="even">
 <td align="left">Number of rows</td>
-<td align="left">17150</td>
+<td align="left">16962</td>
 </tr>
 <tr class="odd">
 <td align="left">Number of columns</td>
@@ -582,12 +594,12 @@ skimr::skim(df_clean)</code></pre>
 <p><strong>Variable type: numeric</strong></p>
 <table>
 <colgroup>
-<col width="12%" />
-<col width="8%" />
-<col width="12%" />
+<col width="13%" />
 <col width="9%" />
-<col width="9%" />
-<col width="10%" />
+<col width="13%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
 <col width="7%" />
 <col width="7%" />
 <col width="8%" />
@@ -614,12 +626,12 @@ skimr::skim(df_clean)</code></pre>
 <td align="left">id</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">9251.12</td>
-<td align="right">5340.00</td>
+<td align="right">9243.96</td>
+<td align="right">5341.38</td>
 <td align="right">1.00</td>
-<td align="right">4635.25</td>
-<td align="right">9258.50</td>
-<td align="right">13871.75</td>
+<td align="right">4622.25</td>
+<td align="right">9242.50</td>
+<td align="right">13864.75</td>
 <td align="right">18490.00</td>
 <td align="left">▇▇▇▇▇</td>
 </tr>
@@ -653,12 +665,12 @@ skimr::skim(df_clean)</code></pre>
 <td align="left">income</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">126.78</td>
+<td align="right">126.84</td>
 <td align="right">35.63</td>
 <td align="right">25.88</td>
-<td align="right">102.04</td>
-<td align="right">124.98</td>
-<td align="right">149.60</td>
+<td align="right">102.06</td>
+<td align="right">125.11</td>
+<td align="right">149.63</td>
 <td align="right">301.39</td>
 <td align="left">▂▇▅▁▁</td>
 </tr>
@@ -669,9 +681,9 @@ skimr::skim(df_clean)</code></pre>
 <td align="right">20.12</td>
 <td align="right">5.83</td>
 <td align="right">10.00</td>
-<td align="right">15.05</td>
+<td align="right">15.06</td>
 <td align="right">20.17</td>
-<td align="right">25.24</td>
+<td align="right">25.23</td>
 <td align="right">30.00</td>
 <td align="left">▇▇▇▇▇</td>
 </tr>
@@ -679,14 +691,14 @@ skimr::skim(df_clean)</code></pre>
 <td align="left">hhincome</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">-109540.47</td>
-<td align="right">1041284.69</td>
-<td align="right">-9999999.00</td>
-<td align="right">53.97</td>
-<td align="right">76.75</td>
-<td align="right">103.04</td>
+<td align="right">81.41</td>
+<td align="right">35.61</td>
+<td align="right">7.96</td>
+<td align="right">54.71</td>
+<td align="right">77.27</td>
+<td align="right">103.40</td>
 <td align="right">262.79</td>
-<td align="left">▁▁▁▁▇</td>
+<td align="left">▅▇▃▁▁</td>
 </tr>
 <tr class="odd">
 <td align="left">race</td>
@@ -703,7 +715,7 @@ skimr::skim(df_clean)</code></pre>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>view(df_clean)</code></pre>
+<pre class="r"><code>View(df_clean)</code></pre>
 <p>We can now proceed to the next task.</p>
 </div>
 <div id="part-1.1" class="section level1">
@@ -722,19 +734,19 @@ summary(model)</code></pre>
 ## lm(formula = income ~ scholarship, data = df_clean)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -100.64  -24.86   -1.87   22.81  173.82 
+##      Min       1Q   Median       3Q      Max 
+## -100.727  -24.857   -1.856   22.784  173.825 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 123.53338    0.97654 126.501  &lt; 2e-16 ***
-## scholarship   0.16145    0.04662   3.463 0.000535 ***
+## (Intercept) 123.87722    0.98273 126.054  &lt; 2e-16 ***
+## scholarship   0.14736    0.04692   3.141  0.00169 ** 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 35.61 on 17148 degrees of freedom
-## Multiple R-squared:  0.0006989,  Adjusted R-squared:  0.0006406 
-## F-statistic: 11.99 on 1 and 17148 DF,  p-value: 0.0005355</code></pre>
+## Residual standard error: 35.62 on 16960 degrees of freedom
+## Multiple R-squared:  0.0005814,  Adjusted R-squared:  0.0005224 
+## F-statistic: 9.866 on 1 and 16960 DF,  p-value: 0.001687</code></pre>
 <p>Here, the intercept <span class="math inline">\(\alpha_0\)</span>
 shows the expected income for an individual who would have received 0USD
 of scholarship value, which is irrelevant for our analysis as we are
@@ -750,25 +762,25 @@ summary(model)</code></pre>
 ## lm(formula = income ~ scholarship_mincentered, data = df_clean)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -100.64  -24.86   -1.87   22.81  173.82 
+##      Min       1Q   Median       3Q      Max 
+## -100.727  -24.857   -1.856   22.784  173.825 
 ## 
 ## Coefficients:
 ##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)             125.14809    0.54442 229.873  &lt; 2e-16 ***
-## scholarship_mincentered   0.16145    0.04662   3.463 0.000535 ***
+## (Intercept)             125.35102    0.54785 228.807  &lt; 2e-16 ***
+## scholarship_mincentered   0.14736    0.04692   3.141  0.00169 ** 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 35.61 on 17148 degrees of freedom
-## Multiple R-squared:  0.0006989,  Adjusted R-squared:  0.0006406 
-## F-statistic: 11.99 on 1 and 17148 DF,  p-value: 0.0005355</code></pre>
+## Residual standard error: 35.62 on 16960 degrees of freedom
+## Multiple R-squared:  0.0005814,  Adjusted R-squared:  0.0005224 
+## F-statistic: 9.866 on 1 and 16960 DF,  p-value: 0.001687</code></pre>
 <p>The results are the same, except we now have the exact intercept for
 the minimum observed scholarship value, i.e. 10,000 USD:</p>
-<p><span class="math inline">\(\alpha_0\)</span> = 125.148: the
+<p><span class="math inline">\(\alpha_0\)</span> = 125.351: the
 estimated income 10 years after high school graduation for a student who
 received the minimum scholarship amount (10,000 USD).</p>
-<p><span class="math inline">\(\alpha_1\)</span> = 0.16145: the
+<p><span class="math inline">\(\alpha_1\)</span> = 0.14736: the
 estimated coefficient for scholarship indicates that for each additional
 1,000 USD received, future income increases by approximately 161.45
 USD.</p>
@@ -814,25 +826,27 @@ summary(model_interaction)</code></pre>
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -103.125  -24.705   -1.688   22.699  171.305 
+## -103.205  -24.732   -1.658   22.672  171.307 
 ## 
 ## Coefficients:
 ##                           Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)              1.435e+02  1.856e+02   0.773   0.4394  
-## scholarship_mincentered  1.761e+00  1.866e+01   0.094   0.9248  
-## year_mincentered        -4.793e-01  1.949e-01  -2.460   0.0139 *
-## interaction             -7.976e-04  9.304e-03  -0.086   0.9317  
+## (Intercept)             148.103317 186.795826   0.793   0.4279  
+## scholarship_mincentered   2.186199  18.772943   0.116   0.9073  
+## year_mincentered         -0.475387   0.196111  -2.424   0.0154 *
+## interaction              -0.001016   0.009363  -0.109   0.9136  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 35.53 on 17146 degrees of freedom
-## Multiple R-squared:  0.005533,   Adjusted R-squared:  0.005359 
-## F-statistic:  31.8 on 3 and 17146 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>We observe that the the estimated interaction <span class="math inline">\(\alpha_3 = -0.0008\)</span> with a se of 0.0093, a
-t-statistic of -0.086 and a <strong>p-value of 0.9317</strong>. Because
-the p-value is very high compared to the conventional significance level
-(0.05), <strong>we fail to reject the null hypothesis</strong> <span class="math inline">\(H_0\)</span>, there is no statistical evidence
-that the effect of scholarship on income has changed over time.</p>
+## Residual standard error: 35.54 on 16958 degrees of freedom
+## Multiple R-squared:  0.005424,   Adjusted R-squared:  0.005248 
+## F-statistic: 30.83 on 3 and 16958 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>We observe that the the estimated interaction <span class="math inline">\(\alpha_3 = -0.001016\)</span> with a se of 0.0093,
+a t-statistic of -0.109 and a <strong>p-value of 0.9136</strong>.
+Because the p-value is very high compared to the conventional
+significance level (0.05), <strong>we fail to reject the null
+hypothesis</strong> <span class="math inline">\(H_0\)</span>, there is
+no statistical evidence that the effect of scholarship on income has
+changed over time.</p>
 </div>
 <div id="part-1.3" class="section level1">
 <h1>Part 1.3</h1>
@@ -841,9 +855,11 @@ obtaining a college degree on an individual’s income ten years after
 high school graduation. The government seeks to understand whether
 higher education leads to improved economic outcomes, using data from a
 randomized scholarship program.</p>
-<p>A naïve estimation of the relationship between education and income
-using ordinary least squares (OLS) would involve regressing income
-directly on college attainment:</p>
+<p>A naïve approach regresses income on college attendance using
+ordinary least squares (OLS). However, college is a choice variable,
+likely influenced by unobserved factors like motivation and ability,
+which also affect income. This introduces endogeneity, leading to
+omitted variable bias in the OLS estimate.</p>
 <p><span class="math display">\[income = \beta_0 + \beta_1 \cdot
 college_i + \epsilon_i \]</span> However, college attendance is a choice
 variable likely influenced by unobserved factors such as motivation,
@@ -872,18 +888,18 @@ summary(ols_model)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -83.934 -21.542  -2.322  19.260 163.705 
+## -83.967 -21.572  -2.351  19.278 163.672 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  96.1838     0.4557  211.05   &lt;2e-16 ***
-## college      41.4985     0.5308   78.19   &lt;2e-16 ***
+## (Intercept)  96.2043     0.4591  209.56   &lt;2e-16 ***
+## college      41.5111     0.5344   77.68   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 30.59 on 17148 degrees of freedom
-## Multiple R-squared:  0.2628, Adjusted R-squared:  0.2628 
-## F-statistic:  6113 on 1 and 17148 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 30.6 on 16960 degrees of freedom
+## Multiple R-squared:  0.2624, Adjusted R-squared:  0.2624 
+## F-statistic:  6034 on 1 and 16960 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Estimate: 41.51 (SE = 0.53, p &lt; 2e-16) <em>Interpretation:</em>
 College graduates earn $41,511 more annually than non-graduates, on
 average. However, this estimate may be upward biased due to unobserved
@@ -897,18 +913,18 @@ summary(first_stage)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -0.8325 -0.6456  0.2218  0.2874  0.3601 
+## -0.8327 -0.6467  0.2215  0.2866  0.3589 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 0.5434902  0.0119691   45.41   &lt;2e-16 ***
-## scholarship 0.0096348  0.0005714   16.86   &lt;2e-16 ***
+## (Intercept) 0.5453093  0.0120329   45.32   &lt;2e-16 ***
+## scholarship 0.0095805  0.0005745   16.68   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4365 on 17148 degrees of freedom
-## Multiple R-squared:  0.01631,    Adjusted R-squared:  0.01625 
-## F-statistic: 284.3 on 1 and 17148 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.4362 on 16960 degrees of freedom
+## Multiple R-squared:  0.01614,    Adjusted R-squared:  0.01608 
+## F-statistic: 278.1 on 1 and 16960 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Estimate of <span class="math inline">\(\pi_1\)</span> (scholarship →
 college): 0.00958 (p &lt; 2e-16) F-statistic: 278.1 The instrument is
 strong and statistically significant, satisfying the relevance
@@ -922,18 +938,18 @@ summary(iv_model)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -88.550 -22.915  -2.558  20.260 170.204 
+## -89.614 -23.119  -2.503  20.434 170.517 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  114.426      3.262  35.077  &lt; 2e-16 ***
-## college       16.757      4.412   3.798 0.000146 ***
+## (Intercept)  115.490      3.326  34.723  &lt; 2e-16 ***
+## college       15.381      4.494   3.423 0.000621 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 32.47 on 17148 degrees of freedom
-## Multiple R-Squared: 0.1694,  Adjusted R-squared: 0.1693 
-## Wald test: 14.43 on 1 and 17148 DF,  p-value: 0.0001461</code></pre>
+## Residual standard error: 32.69 on 16960 degrees of freedom
+## Multiple R-Squared: 0.1584,  Adjusted R-squared: 0.1584 
+## Wald test: 11.72 on 1 and 16960 DF,  p-value: 0.000621</code></pre>
 <p>Estimate: 15.38 (SE = 4.49, p = 0.0006) <em>Interpretation: </em>
 Receiving a college degree causes a $15,381 increase in annual income
 for those influenced by the scholarship (the compilers). This estimate
@@ -947,21 +963,21 @@ summary(iv_model_controls)</code></pre>
 ##     hhincome + race, data = df_clean)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -94.519 -21.146  -2.179  18.796 164.081 
+##       Min        1Q    Median        3Q       Max 
+## -42.19964 -12.95572  -0.05853  12.70562  57.84772 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 9.019e+01  2.702e+00  33.376  &lt; 2e-16 ***
-## college     1.691e+01  4.090e+00   4.135 3.57e-05 ***
-## hhincome    3.839e-07  2.225e-07   1.726   0.0844 .  
-## race        3.020e+01  7.345e-01  41.118  &lt; 2e-16 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 51.80241    1.23345  41.998   &lt;2e-16 ***
+## college     21.00219    2.26415   9.276   &lt;2e-16 ***
+## hhincome     0.79812    0.00759 105.159   &lt;2e-16 ***
+## race        -6.79075    0.37757 -17.985   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 30.11 on 17146 degrees of freedom
-## Multiple R-Squared: 0.2857,  Adjusted R-squared: 0.2856 
-## Wald test:  1047 on 3 and 17146 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 16.8 on 16958 degrees of freedom
+## Multiple R-Squared: 0.7778,  Adjusted R-squared: 0.7778 
+## Wald test: 1.705e+04 on 3 and 16958 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>college coefficient: 21.00 (SE = 2.26, p &lt; 2e-16)</p>
 <p>These results strongly support the hypothesis that college education
 increases income. However, the comparison between OLS and IV estimates
@@ -977,7 +993,7 @@ scholarship amount i.e., marginal students.</li>
 </ul>
 <p><em>Conclusion:</em> Using a credible instrument — randomized
 scholarship values — we estimate that obtaining a college degree
-causally increases income by between 15,000 and 21,000 dollars per year
+causally increases income by between 15,000USD and 21,000USD per year
 for marginal students. These results are statistically significant and
 robust to the inclusion of important controls.</p>
 <p>This finding supports policies that lower financial barriers to
